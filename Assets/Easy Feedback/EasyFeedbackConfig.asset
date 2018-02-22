@@ -11,31 +11,60 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96d143a29997b3c4089c2b7f72fd3582, type: 3}
   m_Name: EasyFeedbackConfig
   m_EditorClassIdentifier: 
-  StoreLocal: 1
-  Token: 
+  StoreLocal: 0
+  Token: 8d0fec97fdb4b3ce825d87abb54a88e93f0b004340b7c8dee523cf4ebb1354f9
   Board:
-    Id: 
-    ListNames: []
-    ListIds: []
+    Id: 5a8c8c2a4fbeee710bf03415
+    ListNames:
+    - Ideas/Misc
+    - Sprints
+    - TODO
+    - Current Sprint
+    - Done
+    - Bugs (EF)
+    - Feedback (EF)
+    ListIds:
+    - 5a8c8c39b2a6bbf71d219855
+    - 5a8c8d8a4f6c24f76d9bd302
+    - 5a8c8c3a216d709daaf1a8e0
+    - 5a8c8c3c36262015c0ab9016
+    - 5a8c8c3c79422ea33d60c90b
+    - 5a8f2a889df4a1032efc7842
+    - 5a8f2a93b01c74270335f15d
     CategoryNames:
-    - Feedback
-    - Bug
+    - 'Bugs '
+    - 'Feedback '
     CategoryIds:
-    - 
-    - 
+    - 5a8f2a889df4a1032efc7842
+    - 5a8f2a93b01c74270335f15d
     Labels:
-    - id: 1
-      idBoard: 
-      name: Low Priority
-      color: 
+    - id: 5a8c8c2a35b91abfde266f77
+      idBoard: 5a8c8c2a4fbeee710bf03415
+      name: 
+      color: green
       uses: 0
-    - id: 2
-      idBoard: 
-      name: Medium Priority
-      color: 
+    - id: 5a8c8c2a35b91abfde266f78
+      idBoard: 5a8c8c2a4fbeee710bf03415
+      name: Low Priority (EF)
+      color: yellow
       uses: 0
-    - id: 3
-      idBoard: 
-      name: High Priority
-      color: 
+    - id: 5a8c8c2a35b91abfde266f79
+      idBoard: 5a8c8c2a4fbeee710bf03415
+      name: 
+      color: orange
+      uses: 0
+    - id: 5a8c8c2a35b91abfde266f7a
+      idBoard: 5a8c8c2a4fbeee710bf03415
+      name: High Priority (EF)
+      color: red
+      uses: 0
+    - id: 5a8c8c2a35b91abfde266f7b
+      idBoard: 5a8c8c2a4fbeee710bf03415
+      name: 
+      color: purple
+      uses: 0
+    - id: 5a8c8c2a35b91abfde266f7c
+      idBoard: 5a8c8c2a4fbeee710bf03415
+      name: 
+      color: blue
       uses: 0
