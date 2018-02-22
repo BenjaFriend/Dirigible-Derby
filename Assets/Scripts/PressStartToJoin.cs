@@ -23,12 +23,12 @@ public class PressStartToJoin : MonoBehaviour
         {
             if (ReInput.players.GetPlayer(i).GetButtonDown(Constants.RewiredInputActions.JoinGame))
             {
-                CreateNextPlayer(i);
+                createNextPlayer(i);
             }
         }
     }
 
-    private void CreateNextPlayer(int rewiredPlayerId)
+    private void createNextPlayer(int rewiredPlayerId)
     {
         if(_currentPlayerCount >= maxPlayerCount)
         {
