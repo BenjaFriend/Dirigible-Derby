@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96d143a29997b3c4089c2b7f72fd3582, type: 3}
+  m_Name: EasyFeedbackConfig
+  m_EditorClassIdentifier: 
+  StoreLocal: 1
+  Token: 
+  Board:
+    Id: 
+    ListNames: []
+    ListIds: []
+    CategoryNames:
+    - Feedback
+    - Bug
+    CategoryIds:
+    - 
+    - 
+    Labels:
+    - id: 1
+      idBoard: 
+      name: Low Priority
+      color: 
+      uses: 0
+    - id: 2
+      idBoard: 
+      name: Medium Priority
+      color: 
+      uses: 0
+    - id: 3
+      idBoard: 
+      name: High Priority
+      color: 
+      uses: 0
