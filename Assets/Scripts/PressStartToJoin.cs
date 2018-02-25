@@ -9,18 +9,26 @@ using Rewired;
 public class PressStartToJoin : MonoBehaviour
 {
     #region Fields
-    public int maxPlayerCount = 4;
+    public int MaxPlayerCount = 4;
 
-    public GameObject playerPrefab;
+    public GameObject PlayerPrefab;
 
-    private int _currentPlayerCount = 0;
+    private List<int> _activePlayers;
     #endregion
+
+    private void Awake()
+    {
+        _activePlayers = new List<int>();
+    }
 
     private void Update()
     {
         // Watch for JoinGame action in each Player
         for (int i = 0; i < ReInput.players.playerCount; i++)
         {
+            if (_activePlayers.Contains(i)) // skip players who have already joined
+                continue;
+
             if (ReInput.players.GetPlayer(i).GetButtonDown(Constants.RewiredInputActions.JoinGame))
             {
                 createNextPlayer(i);
@@ -30,15 +38,19 @@ public class PressStartToJoin : MonoBehaviour
 
     private void createNextPlayer(int rewiredPlayerId)
     {
-        if(_currentPlayerCount >= maxPlayerCount)
+        if(_activePlayers.Count >= MaxPlayerCount)
         {
             return;
         }
 
         // instatiate
-        // give the rewired index
+        GameObject playerObj = Instantiate<GameObject>(PlayerPrefab);
+        PlayerController player = playerObj.GetComponent<PlayerController>();
 
-        _currentPlayerCount++;
+        // give the rewired index
+        player.Initialize(rewiredPlayerId);
+
+        _activePlayers.Add(rewiredPlayerId);
     }
 
 }
