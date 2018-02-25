@@ -2,16 +2,34 @@
 
 public class PlayerController : MonoBehaviour
 {
+    public Forcer BalloonForcer;
     public Forcer LeftProp, RightProp;
 
     /// <summary>
     /// How fast the basket can fall with the balloon attached
     /// </summary>
-    public float BalloonMaxVelo;
+    public float BalloonMinYVelo;
 
+    /// <summary>
+    /// How fast the basket can rise with the balloon attached
+    /// </summary>
+    public float BalloonMaxYVelo;
+
+    /// <summary>
+    /// Maxiumum amount the baloon can rotate from 0 on either side
+    /// </summary>
     public float MaxAngle;
-
+    
+    /// <summary>
+    /// Maximum propellor force
+    /// </summary>
     public float MaxPropForce;
+
+    /// <summary>
+    /// How much force the inflate button applies
+    /// </summary>
+    public float InflateForce;
+    private Vector2 _balloonDefaultForce;
 
     private Rewired.Player _rewired;
     private Rigidbody2D _body;
@@ -85,9 +103,7 @@ public class PlayerController : MonoBehaviour
 
     private void clampVelo()
     {
-        Vector2 velo = _body.velocity;
-        velo.y = Mathf.Clamp(velo.y, -BalloonMaxVelo, float.PositiveInfinity);
-        _body.velocity = velo;
+        setBodyVelocityY(Mathf.Clamp(_body.velocity.y, BalloonMinYVelo, BalloonMaxYVelo));
     }
 
     private void clampRotation()
@@ -143,7 +159,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onInflatePressed(Rewired.InputActionEventData data)
     {
+        if (_body.velocity.y < 0)
+            setBodyVelocityY(_body.velocity.y / 2f);
 
+        _balloonDefaultForce = BalloonForcer.Force;
+        BalloonForcer.Force = InflateForce * Vector2.up;
     }
 
     /// <summary>
@@ -151,7 +171,26 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onInflateReleased(Rewired.InputActionEventData data)
     {
+        BalloonForcer.Force = _balloonDefaultForce;
+    }
 
+    private void setBodyVelocity(float x, float y)
+    {
+        _body.velocity = new Vector2(x, y);
+    }
+
+    private void setBodyVelocityX(float x)
+    {
+        Vector2 velocity = _body.velocity;
+        velocity.x = x;
+        _body.velocity = velocity;
+    }
+
+    private void setBodyVelocityY(float y)
+    {
+        Vector2 velocity = _body.velocity;
+        velocity.y = y;
+        _body.velocity = velocity;
     }
 
     private void logFormat(string format, params object[] args)

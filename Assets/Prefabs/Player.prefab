@@ -550,11 +550,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8737bb159bd1cf14f8bd92ef55d77309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BalloonForcer: {fileID: 114947601981853252}
   LeftProp: {fileID: 114046234562325746}
   RightProp: {fileID: 114705196184513898}
-  BalloonMaxVelo: 2
+  BalloonMinYVelo: -2
+  BalloonMaxYVelo: 10
   MaxAngle: 35
   MaxPropForce: 8
+  InflateForce: 20
 --- !u!114 &114947601981853252
 MonoBehaviour:
   m_ObjectHideFlags: 1
