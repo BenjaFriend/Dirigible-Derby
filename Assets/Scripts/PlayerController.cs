@@ -3,12 +3,18 @@
 public class PlayerController : MonoBehaviour
 {
     public Forcer BalloonForcer;
+    public Forcer DeflateForcer;
     public Forcer LeftProp, RightProp;
 
     /// <summary>
     /// How fast the basket can fall with the balloon attached
     /// </summary>
     public float BalloonMinYVelo;
+
+    /// <summary>
+    /// How fast the basket can fall when deflate is pressed
+    /// </summary>
+    public float DeflateMinYVelo;
 
     /// <summary>
     /// How fast the basket can rise with the balloon attached
@@ -29,16 +35,26 @@ public class PlayerController : MonoBehaviour
     /// How much force the inflate button applies
     /// </summary>
     public float InflateForce;
+
+    /// <summary>
+    /// How much force the deflate button applies
+    /// </summary>
+    public float DeflateForce;
+
     private Vector2 _balloonDefaultForce;
 
     private Rewired.Player _rewired;
     private Rigidbody2D _body;
     private float _initAngularDrag;
 
+    private float _minYVelo, _maxYVelo;
+
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
         _initAngularDrag = _body.angularDrag;
+        _minYVelo = BalloonMinYVelo;
+        _maxYVelo = BalloonMaxYVelo;
     }
 
     public void Initialize(int rewiredPlayerID)
@@ -103,7 +119,7 @@ public class PlayerController : MonoBehaviour
 
     private void clampVelo()
     {
-        setBodyVelocityY(Mathf.Clamp(_body.velocity.y, BalloonMinYVelo, BalloonMaxYVelo));
+        setBodyVelocityY(Mathf.Clamp(_body.velocity.y, _minYVelo, _maxYVelo));
     }
 
     private void clampRotation()
@@ -118,7 +134,6 @@ public class PlayerController : MonoBehaviour
     {
         setPropForce(LeftProp, data.GetAxis());
     }
-
 
     /// <summary>
     /// Called by ReWired when right trigger axis data is updated
@@ -143,7 +158,11 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onDeflatePressed(Rewired.InputActionEventData data)
     {
-
+        if (_body.velocity.y > 0)
+            setBodyVelocityY(_body.velocity.y / 2);
+        
+        _minYVelo = DeflateMinYVelo;
+        DeflateForcer.Force = DeflateForce * Vector2.down;
     }
 
     /// <summary>
@@ -151,7 +170,10 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onDeflateReleased(Rewired.InputActionEventData data)
     {
+        //TODO: check if the balloon is popped so we don't accidentally set the wrong min y here
+        _minYVelo = BalloonMinYVelo;
 
+        DeflateForcer.Force = Vector2.zero;
     }
 
     /// <summary>
