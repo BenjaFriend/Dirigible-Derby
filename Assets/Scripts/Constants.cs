@@ -11,6 +11,13 @@ public static class Constants
         public const string Inflate = "Inflate";
         public const string LeftTrigger = "LeftTrigger";
         public const string RightTrigger = "RightTrigger";
+    }
 
+    public static class PlayerPhysicsLayers
+    {
+        public const int Player_0_Layer = 8;
+        public const int Player_1_Layer = 9;
+        public const int Player_2_Layer = 10;
+        public const int Player_3_Layer = 11;
     }
 }

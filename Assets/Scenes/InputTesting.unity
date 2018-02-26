@@ -152,6 +152,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114351998645767530, guid: 99c82aec61f3b3c4e8a20614b488fff9,
+        type: 2}
+      propertyPath: PlayerPrefab
+      value: 
+      objectReference: {fileID: 1998744783886466, guid: 926be3f2edb6c0c4e8e842aee841d7d2,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 99c82aec61f3b3c4e8a20614b488fff9, type: 2}
   m_IsPrefabParent: 0
@@ -207,8 +213,8 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
-  m_Depth: -1
+  orthographic size: 12.14
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 4294967295
