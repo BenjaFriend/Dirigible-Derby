@@ -21,6 +21,11 @@ public class PressStartToJoin : MonoBehaviour
     public GameObject PlayerPrefab;
 
     /// <summary>
+    /// A list of transforms that will be used as spawn positions
+    /// </summary>
+    public List<Transform> SpawnPoints;
+
+    /// <summary>
     /// List of what players have been added to the game to prevent the same player joining twice
     /// </summary>
     private List<int> _activePlayers;
@@ -46,6 +51,11 @@ public class PressStartToJoin : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Creates an instance of the player prefab, sets the layer to the proper
+    /// one, and initializes their rewired input.
+    /// </summary>
+    /// <param name="rewiredPlayerId">The rewired player who we are instantiating</param>
     private void createNextPlayer(int rewiredPlayerId)
     {
         if(_activePlayers.Count >= MaxPlayerCount)
@@ -53,8 +63,20 @@ public class PressStartToJoin : MonoBehaviour
             return;
         }
 
-        // instatiate
-        GameObject playerObj = Instantiate<GameObject>(PlayerPrefab);
+        Vector3 spawnPoint = Vector3.zero;
+
+        // Set the spawn location of the player to one of the spawn points if there is one
+        try
+        {
+            spawnPoint = SpawnPoints[_activePlayers.Count].position;
+        }
+        catch(System.Exception e)
+        {
+            Debug.LogWarning("There is no spawn point for player " + _activePlayers.Count.ToString() + "\nError: \n" + e.Message);
+        }
+
+        // instatiate the player
+        GameObject playerObj = Instantiate<GameObject>(PlayerPrefab, spawnPoint, Quaternion.identity);
         PlayerController player = playerObj.GetComponent<PlayerController>();
 
         // Set the gameobject on the correct physics layer! 

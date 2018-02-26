@@ -55,6 +55,11 @@ MonoBehaviour:
   MaxPlayerCount: 4
   PlayerPrefab: {fileID: 1998744783886466, guid: 926be3f2edb6c0c4e8e842aee841d7d2,
     type: 2}
+  SpawnPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &114611829592491598
 MonoBehaviour:
   m_ObjectHideFlags: 1
