@@ -7,6 +7,11 @@ public class PlayerController : MonoBehaviour
     public Forcer LeftProp, RightProp;
 
     /// <summary>
+    /// How fast the basket can rise with the balloon attached
+    /// </summary>
+    public float BalloonMaxYVelo;
+
+    /// <summary>
     /// How fast the basket can fall with the balloon attached
     /// </summary>
     public float BalloonMinYVelo;
@@ -17,9 +22,9 @@ public class PlayerController : MonoBehaviour
     public float DeflateMinYVelo;
 
     /// <summary>
-    /// How fast the basket can rise with the balloon attached
+    /// How fast the MinYVelo changes over time
     /// </summary>
-    public float BalloonMaxYVelo;
+    public float MinYVeloLerpSpeed;
 
     /// <summary>
     /// Maxiumum amount the baloon can rotate from 0 on either side
@@ -48,12 +53,14 @@ public class PlayerController : MonoBehaviour
     private float _initAngularDrag;
 
     private float _minYVelo, _maxYVelo;
+    private float _targetMinYVelo;
 
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
         _initAngularDrag = _body.angularDrag;
         _minYVelo = BalloonMinYVelo;
+        _targetMinYVelo = BalloonMinYVelo;
         _maxYVelo = BalloonMaxYVelo;
     }
 
@@ -119,6 +126,9 @@ public class PlayerController : MonoBehaviour
 
     private void clampVelo()
     {
+        // lerp _minYVelo to _targetMinYVelo
+        _minYVelo = Mathf.Lerp(_minYVelo, _targetMinYVelo, MinYVeloLerpSpeed * Time.deltaTime);
+
         setBodyVelocityY(Mathf.Clamp(_body.velocity.y, _minYVelo, _maxYVelo));
     }
 
@@ -161,7 +171,7 @@ public class PlayerController : MonoBehaviour
         if (_body.velocity.y > 0)
             setBodyVelocityY(_body.velocity.y / 2);
         
-        _minYVelo = DeflateMinYVelo;
+        _targetMinYVelo = DeflateMinYVelo;
         DeflateForcer.Force = DeflateForce * Vector2.down;
     }
 
@@ -171,7 +181,7 @@ public class PlayerController : MonoBehaviour
     private void onDeflateReleased(Rewired.InputActionEventData data)
     {
         //TODO: check if the balloon is popped so we don't accidentally set the wrong min y here
-        _minYVelo = BalloonMinYVelo;
+        _targetMinYVelo = BalloonMinYVelo;
 
         DeflateForcer.Force = Vector2.zero;
     }

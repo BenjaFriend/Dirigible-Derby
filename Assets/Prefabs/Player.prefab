@@ -598,9 +598,10 @@ MonoBehaviour:
   DeflateForcer: {fileID: 114161054823590722}
   LeftProp: {fileID: 114046234562325746}
   RightProp: {fileID: 114705196184513898}
+  BalloonMaxYVelo: 10
   BalloonMinYVelo: -2
   DeflateMinYVelo: -12
-  BalloonMaxYVelo: 10
+  MinYVeloLerpSpeed: 10
   MaxAngle: 35
   MaxPropForce: 8
   InflateForce: 20
