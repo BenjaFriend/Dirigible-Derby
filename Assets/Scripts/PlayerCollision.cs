@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// In charge of the player collision with other players. 
@@ -50,7 +48,9 @@ public class PlayerCollision : MonoBehaviour
         if(_rayHit.collider != null && _rayHit.collider.CompareTag("Balloon"))
         {
             // Pop the balloon
-
+            Destroy(_rayHit.collider.gameObject.transform.parent.gameObject);
+            // TODO: Implement a health system for popping balloons
+           
             Debug.Log("HIT : " + _rayHit.collider.name + "Layer: " + _rayHit.collider.gameObject.layer.ToString());
         }
     }

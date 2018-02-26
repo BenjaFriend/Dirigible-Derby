@@ -117,6 +117,7 @@ public class PlayerController : MonoBehaviour
             Constants.RewiredInputActions.Inflate);
     }
 
+
     private void Update()
     {
         clampVelo();
@@ -223,6 +224,61 @@ public class PlayerController : MonoBehaviour
         Vector2 velocity = _body.velocity;
         velocity.y = y;
         _body.velocity = velocity;
+    }
+
+    private void OnDisable()
+    {
+        removeRewired();
+    }
+
+    /// <summary>
+    /// Unhook rewired events from this player, so that we don't get error when
+    /// this object is deleted
+    /// </summary>
+    private void removeRewired()
+    {
+        // register input event listeners
+        _rewired.RemoveInputEventDelegate(
+            onLeftTriggerUpdate,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.Update,
+            Constants.RewiredInputActions.LeftTrigger);
+
+        _rewired.RemoveInputEventDelegate(
+            onRightTriggerUpdate,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.Update,
+            Constants.RewiredInputActions.RightTrigger);
+
+        _rewired.RemoveInputEventDelegate(
+            onRightTriggerUpdate,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.Update,
+            Constants.RewiredInputActions.RightTrigger);
+
+        _rewired.RemoveInputEventDelegate(
+            onDeflatePressed,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.ButtonJustPressed,
+            Constants.RewiredInputActions.Deflate);
+
+        _rewired.RemoveInputEventDelegate(
+            onDeflateReleased,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.ButtonJustReleased,
+            Constants.RewiredInputActions.Deflate);
+
+        _rewired.RemoveInputEventDelegate(
+            onInflatePressed,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.ButtonJustPressed,
+            Constants.RewiredInputActions.Inflate);
+
+        _rewired.RemoveInputEventDelegate(
+            onInflateReleased,
+            Rewired.UpdateLoopType.Update,
+            Rewired.InputActionEventType.ButtonJustReleased,
+            Constants.RewiredInputActions.Inflate);
     }
 
     private void logFormat(string format, params object[] args)
