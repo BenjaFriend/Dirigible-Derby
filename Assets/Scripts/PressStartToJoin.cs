@@ -125,4 +125,9 @@ public class PressStartToJoin : MonoBehaviour
         }
     }
 
+    public void ResetSpawnRoom()
+    {
+        _activePlayers.Clear();
+    }
+
 }

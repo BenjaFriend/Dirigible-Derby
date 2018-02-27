@@ -495,7 +495,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.67
+  m_Radius: 1.54
 --- !u!61 &61279584010195978
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -625,7 +625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RaycastStart: {fileID: 4891633980698256}
-  Length: 1
+  Length: 0.3
 --- !u!114 &114904243422712448
 MonoBehaviour:
   m_ObjectHideFlags: 1
