@@ -20,4 +20,31 @@ public static class Constants
         public const int Player_2_Layer = 10;
         public const int Player_3_Layer = 11;
     }
+
+    public static class Mixer
+    {
+        public const string Path = "Audio/DD_AudioMixer";
+        public static class MixerGroups
+        {
+            public static class Master
+            {
+                public const string Name = "Master";
+                public static class SFX
+                {
+                    public const string Name = Master.Name + "/SFX";
+                }
+
+                public static class BackgroundMusic
+                {
+                    public const string Name = Master.Name + "/Background Music";
+                }
+            }
+        }
+    }
+
+    public static class AudioPoolSize
+    {
+        public const uint Music = 1;
+        public const uint SFX = 10;
+    }
 }
