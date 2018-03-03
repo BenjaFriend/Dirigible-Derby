@@ -23,6 +23,11 @@ public class PlayerController : MonoBehaviour
     public float DeflateMinYVelo;
 
     /// <summary>
+    /// How fast teh basket can fall when popped
+    /// </summary>
+    public float PoppedMinYVelo;
+
+    /// <summary>
     /// How fast the MinYVelo changes over time
     /// </summary>
     public float MinYVeloLerpSpeed;
@@ -67,14 +72,21 @@ public class PlayerController : MonoBehaviour
 
     private float _minYVelo, _maxYVelo;
     private float _targetMinYVelo;
+    private bool _playerHasControl;
 
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
+        ResetValues();
+    }
+
+    public void ResetValues()
+    {
         _minYVelo = BalloonMinYVelo;
         _targetMinYVelo = BalloonMinYVelo;
         _maxYVelo = BalloonMaxYVelo;
         SetState(BalloonState.Idle);
+        _playerHasControl = true;
     }
 
     public void Initialize(int rewiredPlayerID)
@@ -130,10 +142,19 @@ public class PlayerController : MonoBehaviour
             Constants.RewiredInputActions.Inflate);
     }
 
+    /// <summary>
+    /// Called when this player's balloon is popped by another player
+    /// </summary>
+    public void OnPopped()
+    {
+        SetState(BalloonState.Popped);
+    }
+
     private void Update()
     {
         clampVelo();
         clampRotation();
+
         Debug.DrawLine(transform.position, (Vector2)transform.position + _body.velocity, Color.green);
     }
 
@@ -155,6 +176,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onLeftTriggerUpdate(Rewired.InputActionEventData data)
     {
+        if (!_playerHasControl)
+            return;
+
         setPropForce(LeftProp, data.GetAxis());
     }
 
@@ -163,6 +187,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onRightTriggerUpdate(Rewired.InputActionEventData data)
     {
+        if (!_playerHasControl)
+            return;
+
         setPropForce(RightProp, data.GetAxis());
     }
 
@@ -181,6 +208,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onDeflatePressed(Rewired.InputActionEventData data)
     {
+        if (!_playerHasControl)
+            return;
         SetState(BalloonState.Deflate);
     }
 
@@ -189,6 +218,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onDeflateReleased(Rewired.InputActionEventData data)
     {
+        if (!_playerHasControl)
+            return;
+
         SetState(BalloonState.Idle);
     }
 
@@ -197,6 +229,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onInflatePressed(Rewired.InputActionEventData data)
     {
+        if (!_playerHasControl)
+            return;
+
         SetState(BalloonState.Inflate);
     }
 
@@ -205,6 +240,9 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onInflateReleased(Rewired.InputActionEventData data)
     {
+        if (!_playerHasControl)
+            return;
+
         SetState(BalloonState.Idle);
     }
 
@@ -259,6 +297,12 @@ public class PlayerController : MonoBehaviour
                 _targetMinYVelo = DeflateMinYVelo;
                 DeflateForcer.Force = DeflateForce * Vector2.down;
                 break;
+            case BalloonState.Popped:
+                _playerHasControl = false;
+                _targetMinYVelo = PoppedMinYVelo;
+                // apply deflate forcer to drop with "weight"
+                DeflateForcer.Force = DeflateForce * Vector2.down;
+                break;
             default:
                 logWarningFormat("No handler for state {0} in _onStateEnter, did you forget to add it to the switch statement?", Enum.GetName(typeof(BalloonState), state));
                 break;
@@ -279,6 +323,9 @@ public class PlayerController : MonoBehaviour
                 _targetMinYVelo = BalloonMinYVelo;
 
                 DeflateForcer.Force = Vector2.zero;
+                break;
+            case BalloonState.Popped:
+                _playerHasControl = true;
                 break;
             default:
                 logWarningFormat("No handler for state {0} in _onStateExit, did you forget to add it to the switch statement?", Enum.GetName(typeof(BalloonState), state));

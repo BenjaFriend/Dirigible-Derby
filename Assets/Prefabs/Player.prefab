@@ -644,6 +644,7 @@ MonoBehaviour:
   BalloonMaxYVelo: 10
   BalloonMinYVelo: -2
   DeflateMinYVelo: -12
+  PoppedMinYVelo: -18
   MinYVeloLerpSpeed: 10
   MaxAngle: 35
   MaxPropForce: 8

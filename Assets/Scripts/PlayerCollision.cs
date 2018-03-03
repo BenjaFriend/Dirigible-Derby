@@ -48,7 +48,10 @@ public class PlayerCollision : MonoBehaviour
         if(_rayHit.collider != null && _rayHit.collider.CompareTag("Balloon"))
         {
             // Pop the balloon
-            Destroy(_rayHit.collider.gameObject.transform.parent.gameObject);
+            //Destroy(_rayHit.collider.gameObject.transform.parent.gameObject);
+            PlayerController player = _rayHit.transform.GetComponentInParent<PlayerController>();
+            player.OnPopped();
+
             // TODO: Implement a health system for popping balloons
            
             Debug.Log("HIT : " + _rayHit.collider.name + "Layer: " + _rayHit.collider.gameObject.layer.ToString());
