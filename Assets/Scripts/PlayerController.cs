@@ -387,10 +387,10 @@ public class PlayerController : MonoBehaviour
         }
 
         // cycle dupes appropriately if player changed quads
-        // activate last quad dupe
         if (_currentQuad != lastQuad)
         {
             _dupes[lastQuad].gameObject.SetActive(true);
+            _dupes[lastQuad].updateDuplicate();
             _dupes[_currentQuad].gameObject.SetActive(false);
         }
     }
