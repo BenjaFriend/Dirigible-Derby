@@ -50,7 +50,6 @@ public class PlayerController : MonoBehaviour
 
     private Rewired.Player _rewired;
     private Rigidbody2D _body;
-    private float _initAngularDrag;
 
     private float _minYVelo, _maxYVelo;
     private float _targetMinYVelo;
@@ -58,7 +57,6 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
-        _initAngularDrag = _body.angularDrag;
         _minYVelo = BalloonMinYVelo;
         _targetMinYVelo = BalloonMinYVelo;
         _maxYVelo = BalloonMaxYVelo;
