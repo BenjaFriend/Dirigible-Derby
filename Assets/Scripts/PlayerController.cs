@@ -74,6 +74,29 @@ public class PlayerController : MonoBehaviour
     private float _targetMinYVelo;
     private bool _playerHasControl;
 
+    /// <summary>
+    /// Whether or not this controller is a duplicate of another player
+    /// </summary>
+    private bool _isDuplicate;
+
+    /// <summary>
+    /// The player this controller is a duplicate of, if it is a duplicate
+    /// </summary>
+    private PlayerController _parent;
+
+    /// <summary>
+    /// Duplicate player controllers, indexed by quad
+    /// 
+    /// 3 0
+    /// 2 1
+    /// </summary>
+    private PlayerController[] _dupes;
+
+    /// <summary>
+    /// The current screenwrap quad the player is in
+    /// </summary>
+    private int _currentQuad;
+
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
@@ -92,6 +115,29 @@ public class PlayerController : MonoBehaviour
     public void Initialize(int rewiredPlayerID)
     {
         initRewired(rewiredPlayerID);
+        _isDuplicate = false;
+        _currentQuad = getCurrentScreenWrapQuad();
+        initDuplicates();
+    }
+
+    /// <summary>
+    /// Initializes this PlayerController as a duplicate controller for a parent PlayerController
+    /// </summary>
+    public void InitializeDuplicate(PlayerController parent, int quad)
+    {
+        _parent = parent;
+        _isDuplicate = true;
+        _playerHasControl = false;
+
+        _body.isKinematic = true;
+
+        BalloonForcer.enabled = false;
+        DeflateForcer.enabled = false;
+        LeftProp.enabled = false; // we might have to do something about particle systems for left/right props, probably just make sure that they are controlled by the PlayerController
+        RightProp.enabled = false;
+
+        _currentQuad = quad;
+        _updateDuplicate();
     }
 
     private void initRewired(int rewiredPlayerID)
@@ -143,19 +189,147 @@ public class PlayerController : MonoBehaviour
     }
 
     /// <summary>
+    /// Initializes duplicate players for each screen wrap quad
+    /// </summary>
+    private void initDuplicates() 
+    {
+        _dupes = new PlayerController[4];
+        for (int i = 0; i < _dupes.Length; i++)
+        {
+            GameObject dupe = Instantiate(this.gameObject); // clone self
+            dupe.name = transform.name + "(Quad " + i + ")";
+            dupe.transform.position = transform.position;
+            _dupes[i] = dupe.GetComponent<PlayerController>();
+            _dupes[i].InitializeDuplicate(this, i);
+            //if (i == _currentQuad)
+                //dupe.SetActive(false);
+        }
+    }
+
+    /// <summary>
+    /// Returns the current quad the player is in
+    /// </summary>
+    /// <returns></returns>
+    private int getCurrentScreenWrapQuad()
+    {
+        Vector2 pos = Camera.main.WorldToViewportPoint(transform.position);
+        pos -= new Vector2(0.5f, 0.5f);
+
+        bool isRight = (pos.x >= 0 && pos.x < 1); // whether or not the player is on the right side of the screen
+        bool isUpper = (pos.y >= 0 && pos.y < 1); // whether or not the player is in the upper part of the screen
+
+        /*  _ _
+         * |3|0|
+         * |2|1|
+         */
+
+        if (isRight && isUpper) // quadrant 0
+            return 0;
+        else if (isRight && !isUpper) // quad 1
+            return 1;
+        else if (!isRight && !isUpper) // quad 2
+            return 2;
+        else // quad 4
+            return 3;
+    }
+
+    /// <summary>
+    /// Returns the provided viewport coordinates in the provided quad space
+    /// </summary>
+    /// <param name="viewportPos"></param>
+    /// <returns></returns>
+    private Vector2 viewportToQuadSpace(Vector2 viewportPos, int quad)
+    {
+        switch (quad)
+        {
+            case 0:
+                return viewportPos + new Vector2(-0.5f, -0.5f);
+            case 1:
+                return viewportPos + new Vector2(-0.5f, 0.5f);
+            case 2:
+                return viewportPos + new Vector2(0.5f, 0.5f);
+            case 3:
+                return viewportPos + new Vector2(0.5f, -0.5f);
+            default:
+                logErrorFormat("Current quadrant value out of range! Value: {0}", quad);
+                return Vector2.zero;
+        }
+    }
+
+    /// <summary>
+    /// Returns the provided quad coordinates in the viewport space
+    /// </summary>
+    /// <param name="viewportPos"></param>
+    /// <returns></returns>
+    private Vector2 quadToViewportSpace(Vector2 quadPos, int quad)
+    {
+        switch (quad)
+        {
+            case 0:
+                return quadPos - new Vector2(-0.5f, -0.5f);
+            case 1:
+                return quadPos - new Vector2(-0.5f, 0.5f);
+            case 2:
+                return quadPos - new Vector2(0.5f, 0.5f);
+            case 3:
+                return quadPos - new Vector2(0.5f, -0.5f);
+            default:
+                logErrorFormat("Current quadrant value out of range! Value: {0}", quad);
+                return Vector2.zero;
+        }
+    }
+
+    /// <summary>
+    /// Returns the current position of the player relative to its current screen wrap quadrant
+    /// </summary>
+    /// <returns></returns>
+    public Vector2 GetCurrentQuadPos()
+    {
+        Vector2 pos = Camera.main.WorldToViewportPoint(transform.position);
+        return viewportToQuadSpace(pos, _currentQuad);
+    }
+
+    /// <summary>
     /// Called when this player's balloon is popped by another player
     /// </summary>
     public void OnPopped()
     {
+        if(_isDuplicate)
+        {
+            _parent.OnPopped();
+            return;
+        }
+
         SetState(BalloonState.Popped);
     }
 
     private void Update()
     {
+        _currentQuad = getCurrentScreenWrapQuad();
+
+        if (_isDuplicate)
+        {
+            _updateDuplicate();
+            return;
+        }
+
         clampVelo();
         clampRotation();
 
         Debug.DrawLine(transform.position, (Vector2)transform.position + _body.velocity, Color.green);
+    }
+
+    private void _updateDuplicate()
+    {
+        // set wrapped position & rotation
+        Vector2 quadPos = _parent.GetCurrentQuadPos();
+        int parentQuad = _parent._currentQuad;
+        Vector2 viewportPos = quadToViewportSpace(quadPos, _currentQuad);
+        Vector3 pos = Camera.main.ViewportToWorldPoint(viewportPos);
+        pos.z = _parent.transform.position.z;
+        transform.position = pos;
+
+        transform.rotation = _parent.transform.rotation;
     }
 
     private void clampVelo()
@@ -267,7 +441,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
-        removeRewired();
+        if (!_isDuplicate)
+            removeRewired();
     }
 
     public void SetState(BalloonState state)
@@ -391,5 +566,10 @@ public class PlayerController : MonoBehaviour
     private void logWarningFormat(string format, params object[] args)
     {
         Debug.LogWarningFormat("[PlayerController] " + format, args);
+    }
+
+    private void logErrorFormat(string format, params object[] args)
+    {
+        Debug.LogErrorFormat("[PlayerController] " + format, args);
     }
 }
