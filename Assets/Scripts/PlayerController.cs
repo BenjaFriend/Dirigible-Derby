@@ -137,7 +137,7 @@ public class PlayerController : MonoBehaviour
         RightProp.enabled = false;
 
         _currentQuad = quad;
-        _updateDuplicate();
+        updateDuplicate();
     }
 
     private void initRewired(int rewiredPlayerID)
@@ -191,7 +191,7 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Initializes duplicate players for each screen wrap quad
     /// </summary>
-    private void initDuplicates() 
+    private void initDuplicates()
     {
         _dupes = new PlayerController[4];
         for (int i = 0; i < _dupes.Length; i++)
@@ -201,8 +201,8 @@ public class PlayerController : MonoBehaviour
             dupe.transform.position = transform.position;
             _dupes[i] = dupe.GetComponent<PlayerController>();
             _dupes[i].InitializeDuplicate(this, i);
-            //if (i == _currentQuad)
-                //dupe.SetActive(false);
+            if (i == _currentQuad)
+                dupe.SetActive(false);
         }
     }
 
@@ -213,10 +213,20 @@ public class PlayerController : MonoBehaviour
     private int getCurrentScreenWrapQuad()
     {
         Vector2 pos = Camera.main.WorldToViewportPoint(transform.position);
-        pos -= new Vector2(0.5f, 0.5f);
+        return getQuadAtPoint(pos);
+    }
 
-        bool isRight = (pos.x >= 0 && pos.x < 1); // whether or not the player is on the right side of the screen
-        bool isUpper = (pos.y >= 0 && pos.y < 1); // whether or not the player is in the upper part of the screen
+    /// <summary>
+    /// Returns the quad that contains the given point in viewport space
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
+    private int getQuadAtPoint(Vector2 point)
+    {
+        point -= new Vector2(0.5f, 0.5f);
+
+        bool isRight = (point.x >= 0 && point.x < 1); // whether or not the player is on the right side of the screen
+        bool isUpper = (point.y >= 0 && point.y < 1); // whether or not the player is in the upper part of the screen
 
         /*  _ _
          * |3|0|
@@ -283,10 +293,21 @@ public class PlayerController : MonoBehaviour
     /// Returns the current position of the player relative to its current screen wrap quadrant
     /// </summary>
     /// <returns></returns>
-    public Vector2 GetCurrentQuadPos()
+    private Vector2 getCurrentQuadPos()
     {
         Vector2 pos = Camera.main.WorldToViewportPoint(transform.position);
         return viewportToQuadSpace(pos, _currentQuad);
+    }
+
+    private void setCurrentQuad(int quad)
+    {
+        // translate current quad pos to new quad
+        Vector2 quadPos = getCurrentQuadPos();
+        Vector2 viewportPos = quadToViewportSpace(quadPos, quad);
+        Vector3 worldPos = Camera.main.ViewportToWorldPoint(viewportPos);
+        worldPos.z = transform.position.z;
+        transform.position = worldPos;
+        _currentQuad = quad;
     }
 
     /// <summary>
@@ -294,7 +315,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void OnPopped()
     {
-        if(_isDuplicate)
+        if (_isDuplicate)
         {
             _parent.OnPopped();
             return;
@@ -305,24 +326,26 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        int lastQuad = _currentQuad;
         _currentQuad = getCurrentScreenWrapQuad();
 
         if (_isDuplicate)
         {
-            _updateDuplicate();
+            updateDuplicate();
             return;
         }
 
         clampVelo();
         clampRotation();
+        updateScreenWrap(lastQuad);
 
         Debug.DrawLine(transform.position, (Vector2)transform.position + _body.velocity, Color.green);
     }
 
-    private void _updateDuplicate()
+    private void updateDuplicate()
     {
         // set wrapped position & rotation
-        Vector2 quadPos = _parent.GetCurrentQuadPos();
+        Vector2 quadPos = _parent.getCurrentQuadPos();
         int parentQuad = _parent._currentQuad;
         Vector2 viewportPos = quadToViewportSpace(quadPos, _currentQuad);
         Vector3 pos = Camera.main.ViewportToWorldPoint(viewportPos);
@@ -330,6 +353,46 @@ public class PlayerController : MonoBehaviour
         transform.position = pos;
 
         transform.rotation = _parent.transform.rotation;
+    }
+
+    /// <summary>
+    /// Updates screen wrapping for the player (not duplicates)
+    /// </summary>
+    private void updateScreenWrap(int lastQuad)
+    {
+        // wrap the player around to the next side of the screen if they go off one of the sides
+        Vector2 viewportPos = Camera.main.WorldToViewportPoint(transform.position);
+        Vector2 currentViewportPos = viewportPos;
+        if (viewportPos.x < 0)
+        {
+            viewportPos.x += 1;
+        }
+        else if (viewportPos.x >= 1)
+        {
+            viewportPos.x -= 1;
+        }
+
+        if (viewportPos.y < 0)
+        {
+            viewportPos.y += 1;
+        }
+        else if (viewportPos.y >= 1)
+        {
+            viewportPos.y -= 1;
+        }
+
+        if(viewportPos != currentViewportPos)
+        {
+            setCurrentQuad(getQuadAtPoint(viewportPos));
+        }
+
+        // cycle dupes appropriately if player changed quads
+        // activate last quad dupe
+        if (_currentQuad != lastQuad)
+        {
+            _dupes[lastQuad].gameObject.SetActive(true);
+            _dupes[_currentQuad].gameObject.SetActive(false);
+        }
     }
 
     private void clampVelo()
