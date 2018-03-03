@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class PlayerController : MonoBehaviour
     /// Maxiumum amount the baloon can rotate from 0 on either side
     /// </summary>
     public float MaxAngle;
-    
+
     /// <summary>
     /// Maximum propellor force
     /// </summary>
@@ -51,6 +52,19 @@ public class PlayerController : MonoBehaviour
     private Rewired.Player _rewired;
     private Rigidbody2D _body;
 
+    public enum BalloonState
+    {
+        Idle,
+        Inflate,
+        Deflate,
+        Popped
+    }
+    private BalloonState _state;
+    public BalloonState State
+    {
+        get { return _state; }
+    }
+
     private float _minYVelo, _maxYVelo;
     private float _targetMinYVelo;
 
@@ -60,6 +74,7 @@ public class PlayerController : MonoBehaviour
         _minYVelo = BalloonMinYVelo;
         _targetMinYVelo = BalloonMinYVelo;
         _maxYVelo = BalloonMaxYVelo;
+        SetState(BalloonState.Idle);
     }
 
     public void Initialize(int rewiredPlayerID)
@@ -115,7 +130,6 @@ public class PlayerController : MonoBehaviour
             Constants.RewiredInputActions.Inflate);
     }
 
-
     private void Update()
     {
         clampVelo();
@@ -167,11 +181,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onDeflatePressed(Rewired.InputActionEventData data)
     {
-        if (_body.velocity.y > 0)
-            setBodyVelocityY(_body.velocity.y / 2);
-        
-        _targetMinYVelo = DeflateMinYVelo;
-        DeflateForcer.Force = DeflateForce * Vector2.down;
+        SetState(BalloonState.Deflate);
     }
 
     /// <summary>
@@ -179,10 +189,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onDeflateReleased(Rewired.InputActionEventData data)
     {
-        //TODO: check if the balloon is popped so we don't accidentally set the wrong min y here
-        _targetMinYVelo = BalloonMinYVelo;
-
-        DeflateForcer.Force = Vector2.zero;
+        SetState(BalloonState.Idle);
     }
 
     /// <summary>
@@ -190,11 +197,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onInflatePressed(Rewired.InputActionEventData data)
     {
-        if (_body.velocity.y < 0)
-            setBodyVelocityY(_body.velocity.y / 2f);
-
-        _balloonDefaultForce = BalloonForcer.Force;
-        BalloonForcer.Force = InflateForce * Vector2.up;
+        SetState(BalloonState.Inflate);
     }
 
     /// <summary>
@@ -202,7 +205,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void onInflateReleased(Rewired.InputActionEventData data)
     {
-        BalloonForcer.Force = _balloonDefaultForce;
+        SetState(BalloonState.Idle);
     }
 
     private void setBodyVelocity(float x, float y)
@@ -227,6 +230,60 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         removeRewired();
+    }
+
+    public void SetState(BalloonState state)
+    {
+        onStateExit(_state);
+        onStateEnter(state);
+        _state = state;
+    }
+
+    private void onStateEnter(BalloonState state)
+    {
+        switch (state)
+        {
+            case BalloonState.Idle:
+                break;
+            case BalloonState.Inflate:
+                if (_body.velocity.y < 0)
+                    setBodyVelocityY(_body.velocity.y / 2f);
+
+                _balloonDefaultForce = BalloonForcer.Force;
+                BalloonForcer.Force = InflateForce * Vector2.up;
+                break;
+            case BalloonState.Deflate:
+                if (_body.velocity.y > 0)
+                    setBodyVelocityY(_body.velocity.y / 2);
+
+                _targetMinYVelo = DeflateMinYVelo;
+                DeflateForcer.Force = DeflateForce * Vector2.down;
+                break;
+            default:
+                logWarningFormat("No handler for state {0} in _onStateEnter, did you forget to add it to the switch statement?", Enum.GetName(typeof(BalloonState), state));
+                break;
+        }
+    }
+
+    private void onStateExit(BalloonState state)
+    {
+        switch (state)
+        {
+            case BalloonState.Idle:
+                break;
+            case BalloonState.Inflate:
+                BalloonForcer.Force = _balloonDefaultForce;
+                break;
+            case BalloonState.Deflate:
+                //TODO: check if the balloon is popped so we don't accidentally set the wrong min y here
+                _targetMinYVelo = BalloonMinYVelo;
+
+                DeflateForcer.Force = Vector2.zero;
+                break;
+            default:
+                logWarningFormat("No handler for state {0} in _onStateExit, did you forget to add it to the switch statement?", Enum.GetName(typeof(BalloonState), state));
+                break;
+        }
     }
 
     /// <summary>
@@ -282,5 +339,10 @@ public class PlayerController : MonoBehaviour
     private void logFormat(string format, params object[] args)
     {
         Debug.LogFormat("[PlayerController] " + format, args);
+    }
+
+    private void logWarningFormat(string format, params object[] args)
+    {
+        Debug.LogWarningFormat("[PlayerController] " + format, args);
     }
 }
