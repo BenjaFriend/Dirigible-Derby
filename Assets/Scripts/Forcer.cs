@@ -37,7 +37,7 @@ public class Forcer : MonoBehaviour
         if (UseRelativeForce)
             appliedForce = transform.TransformVector(Force);
 
-        Rigidbody.AddForceAtPosition(appliedForce, transform.position);
+        Rigidbody.AddForceAtPosition(appliedForce * (Time.deltaTime / 0.0166f), transform.position);
         Debug.DrawLine(transform.position, (Vector2)transform.position + appliedForce, Color.red);
     }
 }
