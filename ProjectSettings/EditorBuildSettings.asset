@@ -8,3 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/InputTesting.unity
     guid: 0eb6d7e2ef746b949930738da5e85ffa
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 0929eeeb0c80e17408cf8282be65737e

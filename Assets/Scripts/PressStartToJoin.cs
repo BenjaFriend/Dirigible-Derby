@@ -63,7 +63,7 @@ public class PressStartToJoin : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPoint = Vector3.zero;
+        Vector3 spawnPoint = new Vector3(0, 5, 0);
 
         // Set the spawn location of the player to one of the spawn points if there is one
         try
