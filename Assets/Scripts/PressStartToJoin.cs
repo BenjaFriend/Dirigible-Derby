@@ -79,6 +79,8 @@ public class PressStartToJoin : MonoBehaviour
         GameObject playerObj = Instantiate<GameObject>(PlayerPrefab, spawnPoint, Quaternion.identity);
         PlayerController player = playerObj.GetComponent<PlayerController>();
 
+		playerObj.GetComponent<PlayerEngineFire>().InitRewired (rewiredPlayerId);
+
         // Set the gameobject on the correct physics layer! 
         switch (rewiredPlayerId)
         {
@@ -124,10 +126,5 @@ public class PressStartToJoin : MonoBehaviour
                 moveTargets.Push(child);
         }
     }
-
-    public void ResetSpawnRoom()
-    {
-        _activePlayers.Clear();
-    }
-
+		
 }
