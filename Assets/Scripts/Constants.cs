@@ -52,6 +52,7 @@ public static class Constants
     {
         public const string InputTesting = "InputTesting";
         public const string MainMenu = "Menu";
+        public const string Playtesting = "Playtesting";
 
     }
 

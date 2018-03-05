@@ -28,7 +28,7 @@ public class MenuScript : MonoBehaviour
     /// </summary>
     public void LoadGame()
     {
-        loadScene(Constants.Scenes.InputTesting);
+        loadScene(Constants.Scenes.Playtesting);
     }
 
     /// <summary>
