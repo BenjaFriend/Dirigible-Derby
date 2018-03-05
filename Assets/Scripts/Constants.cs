@@ -44,7 +44,7 @@ public static class Constants
 
     public static class AudioPoolSize
     {
-        public const uint Music = 1;
+        public const uint Music = 2;
         public const uint SFX = 10;
     }
 

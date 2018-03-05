@@ -11,12 +11,17 @@ public class MusicManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _source = AudioManager.Instance.Play(Song, AudioPoolType.Music, Constants.Mixer.MixerGroups.Master.BackgroundMusic.Name, true, () => { _source = null; });
+        // todo: Move this to GameManager
+        AudioManager.Instance.SetPoolSize(AudioPoolType.Music, Constants.AudioPoolSize.Music);
+
+        if (_source == null)
+            _source = AudioManager.Instance.Play(Song, AudioPoolType.Music, Constants.Mixer.MixerGroups.Master.BackgroundMusic.Name, true, () => { _source = null; });
     }
 
-    private void ondestroy()
+    private void OnDestroy()
     {
-        _source.Stop();
+        if (_source != null)
+            _source.Stop();
     }
 
     // Update is called once per frame
