@@ -72,7 +72,7 @@ public class PlayerEngineFire : MonoBehaviour
 
 		if (_rewired == null) 
 		{
-			Debug.Log ("Reiwred player " + rewiredPlayerID.ToString() + " is null!");
+			Debug.Log ("Rewired player " + rewiredPlayerID.ToString() + " is null!");
 			return; 
 		}
 
