@@ -1,30 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-using UnityEngine.SceneManagement;
+/// <summary>
+/// Contains the functionality of the main menu such as loading the game
+/// and quitting.
+/// </summary>
+public class MenuScript : MonoBehaviour
+{
+    /// <summary>
+    /// A button that is to be selected by default.
+    /// </summary>
+    public UnityEngine.UI.Button FirstSelectButton;
 
-public class MenuScript : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        if (Input.GetKey("f1"))
+    /// <summary>
+    /// Select the first button so that the input system knows
+    /// what to do
+    /// </summary>
+    private void Start()
+    {
+        if(FirstSelectButton != null)
         {
-            Debug.Log("play");
+            FirstSelectButton.Select();
+        }        
+    }
 
-            SceneManager.LoadScene("InputTesting");
-        }
+    /// <summary>
+    /// Load the main game scene
+    /// </summary>
+    public void LoadGame()
+    {
+        loadScene(Constants.Scenes.InputTesting);
+    }
 
-        if (Input.GetKey("f2"))
-        {
-            Debug.Log("quit");
+    /// <summary>
+    /// Calls Application.quit
+    /// </summary>
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit ();
+#endif
+    }
 
-            Application.Quit();
-        }
-	}
+    /// <summary>
+        /// Loads the scene using SceneManager. Don't forget the scene 
+        /// must be added to build settings
+        /// </summary>
+        /// <param name="sceneName">The name of hte scene to load</param>
+    private void loadScene(string sceneName)
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
 }

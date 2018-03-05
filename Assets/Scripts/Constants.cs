@@ -47,4 +47,12 @@ public static class Constants
         public const uint Music = 1;
         public const uint SFX = 10;
     }
+
+    public static class Scenes
+    {
+        public const string InputTesting = "InputTesting";
+        public const string MainMenu = "Menu";
+
+    }
+
 }

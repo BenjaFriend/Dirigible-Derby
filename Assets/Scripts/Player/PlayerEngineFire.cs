@@ -124,7 +124,7 @@ public class PlayerEngineFire : MonoBehaviour
 		float value = _startingEmmision + data.GetAxis () * FlameScale;;
 
 		_leftEmmisionModule.rateOverTimeMultiplier = value;
-		Debug.Log ("LeftEngine module _startingEmmision: " + value.ToString ());
+
 	}
 
 	/// <summary>
@@ -140,9 +140,6 @@ public class PlayerEngineFire : MonoBehaviour
 		float value = _startingEmmision + data.GetAxis () * FlameScale;;
 
 		_rightEmmisionModule.rateOverTimeMultiplier = value;
-
-		Debug.Log ("RightEngine module _startingEmmision: " + value.ToString ());
-
 	}
 	
 }
