@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
+using UnityEngine.UI;
+
 /// <summary>
 /// This class will be in charge 
 /// </summary>
@@ -26,6 +28,9 @@ public class PressStartToJoin : MonoBehaviour
     public List<Transform> SpawnPoints;
 
     public List<Sprite> balloonSprites;
+
+    public List<string> PlayerNames;
+    public List<Color> playerColors;
 
     /// <summary>
     /// List of what players have been added to the game to prevent the same player joining twice
@@ -81,7 +86,9 @@ public class PressStartToJoin : MonoBehaviour
         GameObject playerObj = Instantiate<GameObject>(PlayerPrefab, spawnPoint, Quaternion.identity);
         PlayerController player = playerObj.GetComponent<PlayerController>();
 
-		playerObj.GetComponent<PlayerEngineFire>().InitRewired (rewiredPlayerId);
+        setPlayerIndicators(rewiredPlayerId, playerObj);
+
+        playerObj.GetComponent<PlayerEngineFire>().InitRewired (rewiredPlayerId);
 
         // Set the gameobject on the correct physics layer! 
         switch (rewiredPlayerId)
@@ -136,6 +143,33 @@ public class PressStartToJoin : MonoBehaviour
             foreach (Transform child in currentTarget)
                 moveTargets.Push(child);
         }
+    }
+
+    /// <summary>
+    /// Sets color of engine particles and player name.
+    /// </summary>
+    /// <param name="rewiredPlayerId"></param>
+    /// <param name="playerPrefab"></param>
+    private void setPlayerIndicators(int rewiredPlayerId, GameObject playerPrefab)
+    {
+        Debug.Log("Setting up Player: " + rewiredPlayerId + " | Color: " + playerColors[rewiredPlayerId]);
+
+        setIndicatorColors(rewiredPlayerId, playerPrefab, playerColors[rewiredPlayerId]);
+        setIndicatorText(rewiredPlayerId, playerPrefab);
+    }
+
+    private void setIndicatorColors(int rewiredPlayerID, GameObject playerPrefab, Color color)
+    {
+        playerPrefab.transform.Find("Left Prop").Find("Engine Fire_Left").GetComponent<ParticleSystem>().startColor = color;
+        playerPrefab.transform.Find("Right Prop").Find("Engine Fire_Right").GetComponent<ParticleSystem>().startColor = color;
+
+        playerPrefab.transform.Find("Indicator").Find("Name").GetComponent<Text>().color = color;
+    }
+
+    private void setIndicatorText(int rewiredPlayerID, GameObject playerPrefab)
+    {
+        playerPrefab.transform.Find("Indicator").Find("Name").GetComponent<Text>().text = PlayerNames[rewiredPlayerID];
+        playerPrefab.transform.Find("Indicator").Find("Name").GetComponent<Text>().text = PlayerNames[rewiredPlayerID];
     }
 		
 }

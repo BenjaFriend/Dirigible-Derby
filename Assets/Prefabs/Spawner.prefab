@@ -180,3 +180,13 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 97899c0ea58316245b9a2aa09d4302d6, type: 3}
   - {fileID: 21300000, guid: d7337b912839e6e438d53f38b8c914be, type: 3}
   - {fileID: 21300000, guid: a244efbc7500373489485bfe4aeb542e, type: 3}
+  PlayerNames:
+  - P1
+  - P2
+  - P3
+  - P4
+  playerColors:
+  - {r: 0.45912623, g: 0.39705884, b: 1, a: 1}
+  - {r: 0.9411764, g: 0, b: 1, a: 1}
+  - {r: 1, g: 0.5735294, b: 0, a: 1}
+  - {r: 0.08767747, g: 0.85172415, b: 0, a: 1}

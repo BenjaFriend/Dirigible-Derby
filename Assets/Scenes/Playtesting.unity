@@ -1075,6 +1075,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 114356524051074928, guid: 782d78f0880233c42a8831ce9ab45139,
+        type: 2}
+      propertyPath: playerColors.Array.data[0].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114356524051074928, guid: 782d78f0880233c42a8831ce9ab45139,
+        type: 2}
+      propertyPath: playerColors.Array.data[1].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114356524051074928, guid: 782d78f0880233c42a8831ce9ab45139,
+        type: 2}
+      propertyPath: playerColors.Array.data[2].a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114356524051074928, guid: 782d78f0880233c42a8831ce9ab45139,
+        type: 2}
+      propertyPath: playerColors.Array.data[3].a
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 782d78f0880233c42a8831ce9ab45139, type: 2}
   m_IsPrefabParent: 0
