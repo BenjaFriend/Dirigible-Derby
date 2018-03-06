@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public float DeflateForce;
 
+    public GameObject Balloon;
+
     private Vector2 _balloonDefaultForce;
 
     private Rewired.Player _rewired;
@@ -118,6 +120,7 @@ public class PlayerController : MonoBehaviour
         _isDuplicate = false;
         _currentQuad = getCurrentScreenWrapQuad();
         initDuplicates();
+        Balloon.SetActive(true);
     }
 
     /// <summary>
@@ -135,6 +138,8 @@ public class PlayerController : MonoBehaviour
         DeflateForcer.enabled = false;
         LeftProp.enabled = false; // we might have to do something about particle systems for left/right props, probably just make sure that they are controlled by the PlayerController
         RightProp.enabled = false;
+
+        Balloon.SetActive(true);
 
         _currentQuad = quad;
         updateDuplicate();
@@ -315,6 +320,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void OnPopped()
     {
+        Balloon.SetActive(false);
+
         if (_isDuplicate)
         {
             _parent.OnPopped();

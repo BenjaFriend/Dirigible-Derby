@@ -326,6 +326,7 @@ GameObject:
   - component: {fileID: 114904243422712448}
   - component: {fileID: 114732864563763678}
   - component: {fileID: 114570954350069638}
+  - component: {fileID: 114184203216398334}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -750,6 +751,18 @@ MonoBehaviour:
   Rigidbody: {fileID: 50682216605715372}
   Force: {x: 0, y: 0}
   UseRelativeForce: 0
+--- !u!114 &114184203216398334
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1998744783886466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4ee1c8c53ac4174b9747eb109cd044d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  balloonSprite: {fileID: 212932520298598922}
 --- !u!114 &114570954350069638
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -815,6 +828,7 @@ MonoBehaviour:
   MaxPropForce: 8
   InflateForce: 20
   DeflateForce: 10
+  Balloon: {fileID: 1174505741255536}
 --- !u!114 &114947601981853252
 MonoBehaviour:
   m_ObjectHideFlags: 1
