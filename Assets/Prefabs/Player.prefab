@@ -815,6 +815,7 @@ MonoBehaviour:
   MaxPropForce: 8
   InflateForce: 20
   DeflateForce: 10
+  Balloon: {fileID: 1174505741255536}
 --- !u!114 &114947601981853252
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 20a89bc5240af3b499fd650d3a8db5d5
+guid: 08b543946cb9c8d47bca2202aa8b018d
 labels:
 - Input
 - Joysticks
@@ -18,7 +18,4 @@ labels:
 - XInput
 - DirectInput
 TextScriptImporter:
-  externalObjects: {}
   userData: 
-  assetBundleName: 
-  assetBundleVariant: 

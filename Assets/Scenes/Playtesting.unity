@@ -592,7 +592,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f836203a30a8c4f884866825dbb0b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxPlayerCount: 5
+  MaxPlayerCount: 4
   PlayerPrefab: {fileID: 1998744783886466, guid: 926be3f2edb6c0c4e8e842aee841d7d2,
     type: 2}
   SpawnPoints:
