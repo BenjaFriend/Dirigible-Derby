@@ -188,9 +188,7 @@ public class PressStartToJoin : MonoBehaviour
         Debug.Log("Setting Text for: " + rewiredPlayerID + " | Text: " + PlayerNames[rewiredPlayerID]);
 
         var text = PlayerNames[rewiredPlayerID];
-
         playerObj.transform.Find("Indicator").Find("Name").GetComponent<Text>().text = text;
-        playerObj.transform.Find("Indicator").Find("Outline").GetComponent<Text>().text = text;
     }
 		
 }
