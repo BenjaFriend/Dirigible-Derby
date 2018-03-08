@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 Commit to your branch, and make sure that the status of your branch is clean.
 	git add .
@@ -22,3 +23,7 @@ git checkout master
 git push
 
 Tell everyone you pushed so they remember to pull! 
+=======
+# Codename "Dirigible Derby"
+P O K E.
+>>>>>>> master
