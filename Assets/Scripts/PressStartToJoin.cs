@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Rewired;
 
+using UnityEngine.UI;
+
 /// <summary>
 /// This class will be in charge 
 /// </summary>
@@ -24,6 +26,11 @@ public class PressStartToJoin : MonoBehaviour
     /// A list of transforms that will be used as spawn positions
     /// </summary>
     public List<Transform> SpawnPoints;
+
+    public List<Sprite> balloonSprites;
+
+    public List<string> PlayerNames;
+    public List<Color> playerColors;
 
     /// <summary>
     /// List of what players have been added to the game to prevent the same player joining twice
@@ -74,30 +81,42 @@ public class PressStartToJoin : MonoBehaviour
         {
             Debug.LogWarning("There is no spawn point for player " + _activePlayers.Count.ToString() + "\nError: \n" + e.Message);
         }
-
+        
         // instatiate the player
         GameObject playerObj = Instantiate<GameObject>(PlayerPrefab, spawnPoint, Quaternion.identity);
         PlayerController player = playerObj.GetComponent<PlayerController>();
 
-		playerObj.GetComponent<PlayerEngineFire>().InitRewired (rewiredPlayerId);
+        // Set player indicator color and text
+        setPlayerIndicators(rewiredPlayerId, playerObj);
+
+        playerObj.GetComponent<PlayerEngineFire>().InitRewired (rewiredPlayerId);
 
         // Set the gameobject on the correct physics layer! 
         switch (rewiredPlayerId)
         {
             case 0:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_0_Layer);
+                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[0];
                 break;
             case 1:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_1_Layer);
+                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[1];
+
                 break;
             case 2:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_2_Layer);
+                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[2];
+
                 break;
             case 3:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_3_Layer);
+                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[3];
+
                 break;
             default:
                 Debug.Log("There is no player physics layer for index " + rewiredPlayerId.ToString());
+                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[0];
+
                 break;
         }
 
@@ -125,6 +144,51 @@ public class PressStartToJoin : MonoBehaviour
             foreach (Transform child in currentTarget)
                 moveTargets.Push(child);
         }
+    }
+
+    /// <summary>
+    /// Sets color of engine particles and player name.
+    /// </summary>
+    /// <param name="rewiredPlayerId"></param>
+    /// <param name="playerPrefab"></param>
+    private void setPlayerIndicators(int rewiredPlayerID, GameObject playerObj)
+    {
+        Debug.Log("Setting up Player: " + rewiredPlayerID + " | Color: " + playerColors[rewiredPlayerID]);
+
+        setIndicatorColors(rewiredPlayerID, playerObj, playerColors[rewiredPlayerID]);
+        setIndicatorText(rewiredPlayerID, playerObj);
+    }
+
+    /// <summary>
+    /// Sets colors for indicator.
+    /// </summary>
+    /// <param name="rewiredPlayerID"></param>
+    /// <param name="playerPrefab"></param>
+    /// <param name="color"></param>
+    private void setIndicatorColors(int rewiredPlayerID, GameObject playerObj, Color color)
+    {
+        Debug.Log("Setting Colors for: " + rewiredPlayerID + " | Color: " + playerColors[rewiredPlayerID]);
+
+        var particlesLeft = playerObj.transform.Find("Left Prop").Find("Engine Fire_Left").GetComponent<ParticleSystem>().main;
+        var particlesRight = playerObj.transform.Find("Right Prop").Find("Engine Fire_Right").GetComponent<ParticleSystem>().main;
+        
+        particlesLeft.startColor = color;
+        particlesRight.startColor = color;
+
+        playerObj.transform.Find("Indicator").Find("Name").GetComponent<Text>().color = color;
+    }
+
+    /// <summary>
+    /// Sets text for indicator.
+    /// </summary>
+    /// <param name="rewiredPlayerID"></param>
+    /// <param name="playerPrefab"></param>
+    private void setIndicatorText(int rewiredPlayerID, GameObject playerObj)
+    {
+        Debug.Log("Setting Text for: " + rewiredPlayerID + " | Text: " + PlayerNames[rewiredPlayerID]);
+
+        var text = PlayerNames[rewiredPlayerID];
+        playerObj.transform.Find("Indicator").Find("Name").GetComponent<Text>().text = text;
     }
 		
 }

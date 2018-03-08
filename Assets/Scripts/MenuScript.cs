@@ -1,46 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-using UnityEngine.SceneManagement;
-using Rewired;
+/// <summary>
+/// Contains the functionality of the main menu such as loading the game
+/// and quitting.
+/// </summary>
+public class MenuScript : MonoBehaviour
+{
+    /// <summary>
+    /// A button that is to be selected by default.
+    /// </summary>
+    public UnityEngine.UI.Button FirstSelectButton;
 
-public class MenuScript : MonoBehaviour {
-
-    public int playerId = 0; // Rewired player id
-
-    private Player player; // Rewired player
-
-    private bool start;
-    private bool quit;
-
-    private void Awake()
+    /// <summary>
+    /// Select the first button so that the input system knows
+    /// what to do
+    /// </summary>
+    private void Start()
     {
-        player = ReInput.players.GetPlayer(playerId);
+        if (FirstSelectButton != null)
+        {
+            FirstSelectButton.Select();
+        }
     }
 
-    // Use this for initialization
-    void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        start = player.GetButtonDown("Start");
-        quit = player.GetButtonDown("Quit");
+    /// <summary>
+    /// Load the main game scene
+    /// </summary>
+    public void LoadGame()
+    {
+        loadScene(Constants.Scenes.Playtesting);
+    }
 
-        if (Input.GetKey("f1") || start)
-        {
-            Debug.Log("play");
+    /// <summary>
+    /// Calls Application.quit
+    /// </summary>
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
+    }
 
-            SceneManager.LoadScene("PrototypeLevel");
-        }
-
-        if (Input.GetKey("f2") || quit)
-        {
-            Debug.Log("quit");
-
-            Application.Quit();
-        }
-	}
+    /// <summary>
+    /// Loads the scene using SceneManager. Don't forget the scene 
+    /// must be added to build settings
+    /// </summary>
+    /// <param name="sceneName">The name of hte scene to load</param>
+    private void loadScene(string sceneName)
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);
+    }
 }

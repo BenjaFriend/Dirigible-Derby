@@ -4,20 +4,25 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    public AudioClip ProtoMusic;
+    public AudioClip Song;
 
     private PooledAudioSource _source;
 
     // Use this for initialization
     void Start()
     {
-        _source = AudioManager.Instance.Play(ProtoMusic, AudioPoolType.Music, Constants.Mixer.MixerGroups.Master.BackgroundMusic.Name, true, () => { _source = null; });
+        // todo: Move this to GameManager
+        AudioManager.Instance.SetPoolSize(AudioPoolType.Music, Constants.AudioPoolSize.Music);
+
+        if (_source == null)
+            _source = AudioManager.Instance.Play(Song, AudioPoolType.Music, Constants.Mixer.MixerGroups.Master.BackgroundMusic.Name, true, () => { _source = null; });
     }
 
-    //private void OnDestroy()
-    //{
-    //    _source.Stop();
-    //}
+    private void OnDestroy()
+    {
+        if (_source != null)
+            _source.Stop();
+    }
 
     // Update is called once per frame
     void Update()
