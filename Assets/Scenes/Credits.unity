@@ -1401,7 +1401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Credits: {fileID: 275373694}
-  Speed: 0.25
+  Speed: 0.75
 --- !u!1 &1860610418
 GameObject:
   m_ObjectHideFlags: 0

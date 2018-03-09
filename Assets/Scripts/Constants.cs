@@ -50,10 +50,9 @@ public static class Constants
 
     public static class Scenes
     {
-        public const string InputTesting = "InputTesting";
-        public const string MainMenu = "Menu";
+        public const string MainMenu = "MainMenu";
         public const string Playtesting = "Playtesting";
-
+        public const string Credits = "Credits";
     }
 
 }
