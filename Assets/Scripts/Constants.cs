@@ -51,6 +51,7 @@ public static class Constants
     public static class Scenes
     {
         public const string MainMenu = "MainMenu";
+        public const string PlayerLobby = "PlayerLobby";
         public const string Playtesting = "Playtesting";
         public const string Credits = "Credits";
     }
