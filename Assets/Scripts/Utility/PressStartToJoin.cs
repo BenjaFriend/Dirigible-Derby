@@ -7,6 +7,8 @@ using UnityEngine.UI;
 
 /// <summary>
 /// This class will be in charge 
+/// TODO: I don't want this class to be in charge. 
+/// Move this stuff to the player lobby manager or the game manager
 /// </summary>
 public class PressStartToJoin : MonoBehaviour
 {
@@ -121,7 +123,7 @@ public class PressStartToJoin : MonoBehaviour
         }
 
         // give the rewired index
-        player.Initialize(rewiredPlayerId);
+        player.Initialize(new PlayerData(rewiredPlayerId));
 
         _activePlayers.Add(rewiredPlayerId);
     }

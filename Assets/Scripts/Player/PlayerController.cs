@@ -1,6 +1,19 @@
 ﻿using System;
 using UnityEngine;
 
+/// <summary>
+/// Holds player initialization data
+/// </summary>
+public struct PlayerData
+{
+    public int RewiredPlayerID;
+
+    public PlayerData(int rewiredPlayerID)
+    {
+        RewiredPlayerID = rewiredPlayerID;
+    }
+}
+
 public class PlayerController : MonoBehaviour
 {
     public Forcer BalloonForcer;
@@ -114,9 +127,9 @@ public class PlayerController : MonoBehaviour
         _playerHasControl = true;
     }
 
-    public void Initialize(int rewiredPlayerID)
+    public void Initialize(PlayerData data)
     {
-        initRewired(rewiredPlayerID);
+        initRewired(data.RewiredPlayerID);
         _isDuplicate = false;
         _currentQuad = getCurrentScreenWrapQuad();
         initDuplicates();
