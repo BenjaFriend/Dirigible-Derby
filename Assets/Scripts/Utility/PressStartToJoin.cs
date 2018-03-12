@@ -169,7 +169,7 @@ public class PressStartToJoin : MonoBehaviour
     /// <param name="color"></param>
     private void setIndicatorColors(int rewiredPlayerID, GameObject playerObj, Color color)
     {
-        Debug.Log("Setting Colors for: " + rewiredPlayerID + " | Color: " + playerColors[rewiredPlayerID]);
+        Debug.Log("Setting Colors for player: " + rewiredPlayerID + " | Color: " + playerColors[rewiredPlayerID]);
 
         var particlesLeft = playerObj.transform.Find("Left Prop").Find("Engine Fire_Left").GetComponent<ParticleSystem>().main;
         var particlesRight = playerObj.transform.Find("Right Prop").Find("Engine Fire_Right").GetComponent<ParticleSystem>().main;
@@ -187,7 +187,7 @@ public class PressStartToJoin : MonoBehaviour
     /// <param name="playerPrefab"></param>
     private void setIndicatorText(int rewiredPlayerID, GameObject playerObj)
     {
-        Debug.Log("Setting Text for: " + rewiredPlayerID + " | Text: " + PlayerNames[rewiredPlayerID]);
+        Debug.Log("Setting Text for player: " + rewiredPlayerID + " | Text: " + PlayerNames[rewiredPlayerID]);
 
         var text = PlayerNames[rewiredPlayerID];
         playerObj.transform.Find("Indicator").Find("Name").GetComponent<Text>().text = text;
