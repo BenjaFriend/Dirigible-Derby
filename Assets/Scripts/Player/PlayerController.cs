@@ -151,6 +151,8 @@ public class PlayerController : MonoBehaviour
     {
         _playerData = data;
         initRewired(data.RewiredPlayerID);
+        setIndicators();
+        GetComponent<QuickPlayerSprites>().balloonSprite.sprite = _playerData.BalloonSprite;
         _isDuplicate = false;
         _currentQuad = getCurrentScreenWrapQuad();
         initDuplicates();
