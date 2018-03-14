@@ -61,4 +61,9 @@ public static class Constants
         public const string Credits = "Credits";
     }
 
+    public static class Tags
+    {
+        public const string SpawnPoint = "Spawn Point";
+    }
+
 }

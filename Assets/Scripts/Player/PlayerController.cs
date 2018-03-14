@@ -2,15 +2,30 @@
 using UnityEngine;
 
 /// <summary>
-/// Holds player initialization data
+/// Holds persistent player data
 /// </summary>
-public struct PlayerData
+public class PlayerData
 {
+    /// <summary>
+    /// The Rewired Player ID for this player
+    /// </summary>
     public int RewiredPlayerID;
 
-    public PlayerData(int rewiredPlayerID)
+    /// <summary>
+    /// Whether or not this player is active
+    /// </summary>
+    public bool Active;
+
+    public string Name;
+
+    public Sprite BalloonSprite;
+
+    public Color Color;
+
+    public PlayerData()
     {
-        RewiredPlayerID = rewiredPlayerID;
+        RewiredPlayerID = -1;
+        Active = false;
     }
 }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Singleton controller for players, game state, and gamemode
@@ -15,11 +16,30 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Per-player data and settings, like ReWired player index, balloon sprites, and color
     /// </summary>
-    public PlayerData[] PlayerData;
+    private PlayerData[] _playerData;
+    public PlayerData[] PlayerData
+    {
+        get { return _playerData; }
+        set
+        {
+            PlayerData = value;
+            // TODO: onplayerdatachanged delegate, or remove this and only use SetPlayerData
+        }
+    }
+
+    private PlayerController[] _players;
+    public PlayerController[] Players
+    {
+        get { return _players; }
+    }
 
     public GameObject PlayerPrefab;
 
-    private SpawnPoint[] _spawnPoints;
+    private Transform[] _spawnPoints;
+    public Transform[] SpawnPoints
+    {
+        get { return _spawnPoints; }
+    }
 
     #region SceneController
     /// <summary>
@@ -64,7 +84,7 @@ public class GameManager : MonoBehaviour
     {
         if (!SceneHasController)
         {
-            Debug.LogWarning("[GameManager] Attempt to deactivate scene controller, but there already isn't one!");
+            logWarningFormat("Attempt to deactivate scene controller, but there already isn't one!");
         }
 
         _sceneController.OnControllerDeactivated();
@@ -72,18 +92,63 @@ public class GameManager : MonoBehaviour
     }
     #endregion SceneController
 
+    /// <summary>
+    /// Changes to a new scene
+    /// </summary>
+    public void ChangeScene(string nextScene)
+    {
+        if (SceneHasController)
+            DeactivateCurrentController();
+
+        // clear players array
+        _players = new PlayerController[Constants.PlayerLobby.MaxPlayers];
+
+        SceneManager.LoadScene(nextScene);
+    }
+
     private void Awake()
     {
         setInstanceOrDestroySelf();
+
+        // init arrays
+        _playerData = new PlayerData[Constants.PlayerLobby.MaxPlayers];
+        _players = new PlayerController[Constants.PlayerLobby.MaxPlayers];
     }
 
     /// <summary>
-    /// Tells the GameManager where the SpawnPoints in the scene are 
+    /// Tells the GameManager where the spawn points in the scene are 
     /// </summary>
     /// <param name="points"></param>
-    public void SetSpawnPoints(SpawnPoint[] points)
+    public void SetSpawnPoints(Transform[] points)
     {
         _spawnPoints = points;
+    }
+
+    /// <summary>
+    /// Tells the GameManager where the spawn points in the scene are 
+    /// </summary>
+    public void SetSpawnPoints(GameObject[] points)
+    {
+        _spawnPoints = new Transform[points.Length];
+        for (int i = 0; i < points.Length; i++)
+        {
+            _spawnPoints[i] = points[i].transform;
+        }
+    }
+
+    /// <summary>
+    /// Sets the initialization data for a player
+    /// </summary>
+    public void SetPlayerData(int playerIndex, PlayerData data)
+    {
+        if (playerIndex >= PlayerData.Length)
+        {
+            logErrorFormat("Attempt to set data for player {0}, but that index is out of range!", playerIndex);
+            return;
+        }
+
+        PlayerData[playerIndex] = data;
+        // TODO: OnPlayerDataChanged delegate
     }
 
     /// <summary>
@@ -91,13 +156,48 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void SpawnAllPlayers()
     {
-        // error if spawnpoints not set or empty
-        // spawn all players
+        for (int i = 0; i < PlayerData.Length; i++)
+        {
+            if (PlayerData[i].Active)
+                SpawnPlayer(i);
+        }
     }
 
-    public void SpawnPlayer(int playerNum)
+    public PlayerController SpawnPlayer(int playerNum)
     {
+        // check that we have the player data, and the player is active
+        if (PlayerData[playerNum] == null || !PlayerData[playerNum].Active)
+        {
+            logErrorFormat("Attempt to spawn player {0} but data is either null or player is not active!", playerNum);
+            return null;
+        }
+
+        // check that we have a spawn point for the player
+        if (SpawnPoints.Length <= playerNum || SpawnPoints[playerNum] == null)
+        {
+            logErrorFormat("No spawn point for player {0}!", playerNum);
+            return null;
+        }
+
+        // check that the player hasn't already been spawned
+        if (Players[playerNum] != null)
+        {
+            logErrorFormat("Player {0} has already been spawned!");
+            return Players[playerNum];
+        }
+
+
         // spawn player at point
+        GameObject playerObj = Instantiate<GameObject>(PlayerPrefab, SpawnPoints[playerNum]);
+        PlayerController player = playerObj.GetComponent<PlayerController>();
+
+        // initialize player
+        player.Initialize(PlayerData[playerNum]);
+
+        // add to active players array
+        _players[playerNum] = player;
+
+        return player;
     }
 
     /// <summary>
@@ -106,7 +206,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     private void setInstanceOrDestroySelf()
     {
-        if(_instance != null)
+        if (_instance != null)
         {
             Debug.LogWarning("[GameManager] There's already an instance of the game manager! Destroying self...");
             DestroyImmediate(this); // intentionally only destroying the component, in case there's any important scripts attached to the object
@@ -116,4 +216,27 @@ public class GameManager : MonoBehaviour
         _instance = this;
         DontDestroyOnLoad(this);
     }
+
+    #region Logging
+    private void logWarningFormat(string format, params object[] args)
+    {
+#if UNITY_EDITOR
+        Debug.LogWarningFormat("[GameManager] " + format, args);
+#endif
+    }
+
+    private void logErrorFormat(string format, params object[] args)
+    {
+#if UNITY_EDITOR
+        Debug.LogErrorFormat("[GameManager] " + format, args);
+#endif
+    }
+
+    private void logFormat(string format, params object[] args)
+    {
+#if UNITY_EDITOR
+        Debug.LogFormat("[GameManager] " + format, args);
+#endif
+    }
+    #endregion
 }

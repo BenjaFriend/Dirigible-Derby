@@ -14,30 +14,6 @@ public class PressStartToJoin : MonoBehaviour
 {
 
     #region Fields
-    /// <summary>
-    /// The max number of players that can be in the game
-    /// </summary>
-    public int MaxPlayerCount = 4;
-
-    /// <summary>
-    /// The player prefab to be instantiated when they press start
-    /// </summary>
-    public GameObject PlayerPrefab;
-
-    /// <summary>
-    /// A list of transforms that will be used as spawn positions
-    /// </summary>
-    public List<Transform> SpawnPoints;
-
-    public List<Sprite> balloonSprites;
-
-    public List<string> PlayerNames;
-    public List<Color> playerColors;
-
-    /// <summary>
-    /// List of what players have been added to the game to prevent the same player joining twice
-    /// </summary>
-    private List<int> _activePlayers;
     #endregion
 
     private void Awake()
