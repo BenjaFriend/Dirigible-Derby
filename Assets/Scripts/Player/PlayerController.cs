@@ -7,6 +7,8 @@ using UnityEngine.UI;
 /// </summary>
 public class PlayerData
 {
+    public int ID;
+    
     /// <summary>
     /// The Rewired Player ID for this player
     /// </summary>
@@ -26,8 +28,9 @@ public class PlayerData
 
     public PlayerData()
     {
-        //RewiredPlayerID = rewiredPlayerID;
         _health = 3;
+
+        ID = -1;
         RewiredPlayerID = -1;
         Active = false;
     }
@@ -52,8 +55,8 @@ public class PlayerController : MonoBehaviour
     public Forcer DeflateForcer;
     public Forcer LeftProp, RightProp;
 
-    public delegate void PlayerPoppedAction(int playerId);
-    public static event PlayerPoppedAction OnPlayerPopped;
+    //public delegate void PlayerPoppedAction(int playerId);
+    //public static event PlayerPoppedAction OnPlayerPopped;
 
     /// <summary>
     /// How fast the basket can rise with the balloon attached
@@ -148,6 +151,15 @@ public class PlayerController : MonoBehaviour
     private int _currentQuad;
 
     private PlayerData _playerData;
+    public PlayerData PlayerData
+    {
+        get { return _playerData; }
+    }
+
+    public delegate void PlayerPoppedEvent(PlayerController playerPopped, PlayerController otherPlayer);
+    public PlayerPoppedEvent OnPlayerPopped;
+
+    private float _respawnTimer;
 
     private void Awake()
     {
@@ -434,23 +446,30 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Called when this player's balloon is popped by another player
     /// </summary>
-    public void OnPopped()
+    public void OnPopped(PlayerController otherPlayer)
     {
+        if(State == BalloonState.Popped)
+        {
+            logWarningFormat("Can not pop player, already popped!");
+            return;
+        }
+
         Balloon.SetActive(false);
 
         if (_isDuplicate)
         {
-            _parent.OnPopped();
+            _parent.OnPopped(otherPlayer);
             return;
         }
 
         SetState(BalloonState.Popped);
 
-        // Tell the game manager that we have popped
-        if(OnPlayerPopped != null)
-        {
-            OnPlayerPopped(_rewired.id);
-        }
+        //// Tell the game manager that we have popped
+        //if(OnPlayerPopped != null)
+        //{
+        //    OnPlayerPopped(_rewired.id);
+        //}
+        OnPlayerPopped(this, otherPlayer);
     }
 
     private void Update()
@@ -464,11 +483,53 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // update respawn timer if we are respawning
+        if(_respawnTimer > 0)
+        {
+            _respawnTimer -= Time.deltaTime;
+            if(_respawnTimer <= 0)
+            {
+                Respawn();
+            }
+        }
+
         clampVelo();
         clampRotation();
         updateScreenWrap(lastQuad);
 
         Debug.DrawLine(transform.position, (Vector2)transform.position + _body.velocity, Color.green);
+    }
+
+    public void RespawnDelayed(float delay)
+    {
+        if (_isDuplicate)
+            _parent.RespawnDelayed(delay);
+
+        logFormat("Respawning in {0} seconds... ", delay);
+
+        _respawnTimer = delay;
+    }
+
+    public void Respawn()
+    {
+        Balloon.SetActive(true);
+
+        if (_isDuplicate)
+        {
+            logFormat("Respawning duplicate...");
+            return;
+        }
+
+        if (State != BalloonState.Popped)
+            logWarningFormat("Respawn called, but the player is not popped!");
+
+        logFormat("Respawning player...");
+
+        ResetValues();
+        for (int i = 0; i < _dupes.Length; i++)
+        {
+            _dupes[i].Respawn();
+        }
     }
 
     private void updateDuplicate()
@@ -649,6 +710,7 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case BalloonState.Idle:
+                _targetMinYVelo = BalloonMinYVelo;
                 break;
             case BalloonState.Inflate:
                 if (_body.velocity.y < 0)
@@ -693,6 +755,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case BalloonState.Popped:
                 _playerHasControl = true;
+                DeflateForcer.Force = Vector2.zero;
                 break;
             default:
                 logWarningFormat("No handler for state {0} in _onStateExit, did you forget to add it to the switch statement?", Enum.GetName(typeof(BalloonState), state));

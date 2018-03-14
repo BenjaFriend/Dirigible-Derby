@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
         set
         {
             PlayerData = value;
+            updatePlayerCount();
             // TODO: onplayerdatachanged delegate, or remove this and only use SetPlayerData
         }
     }
@@ -37,6 +38,12 @@ public class GameManager : MonoBehaviour
         get { return _players; }
     }
 
+    private int _playerCount;
+    public int PlayerCount
+    {
+        get { return _playerCount; }
+    }
+    
     public GameObject PlayerPrefab;
 
     private Transform[] _spawnPoints;
@@ -156,7 +163,23 @@ public class GameManager : MonoBehaviour
         }
 
         PlayerData[playerIndex] = data;
+        updatePlayerCount();
         // TODO: OnPlayerDataChanged delegate
+    }
+
+    /// <summary>
+    /// Called whenever player data changes, counts active and non null players
+    /// </summary>
+    private void updatePlayerCount()
+    {
+        _playerCount = 0;
+        for (int i = 0; i < PlayerData.Length; i++)
+        {
+            if(PlayerData[i] != null && PlayerData[i].Active)
+            {
+                _playerCount++;
+            }
+        }
     }
 
     /// <summary>
@@ -227,12 +250,12 @@ public class GameManager : MonoBehaviour
 
     private void AddListeners()
     {
-        PlayerController.OnPlayerPopped += PlayerPopped;
+        //PlayerController.OnPlayerPopped += PlayerPopped;
     }
 
     private void RemoveListeners()
     {
-        PlayerController.OnPlayerPopped -= PlayerPopped;
+        //PlayerController.OnPlayerPopped -= _instance.PlayerPopped;
     }
 
     private void OnDisable()
@@ -240,9 +263,9 @@ public class GameManager : MonoBehaviour
         RemoveListeners();
     }
 
-    private void PlayerPopped(int pId)
+    private void PlayerPopped(PlayerController playerPopped, PlayerController otherPlayer)
     {
-        _playerData[pId].Health--;
+        //_playerData[pId].Health--;
     }
 
     #region Logging
