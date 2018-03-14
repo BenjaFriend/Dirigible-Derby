@@ -8,7 +8,7 @@ public abstract class SceneController : MonoBehaviour
     /// <summary>
     /// Tells the GameManager that this is the current controller
     /// </summary>
-    protected void Awake()
+    protected void Start()
     {
         GameManager.Instance.SetActiveSceneController(this);
     }

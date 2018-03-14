@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Holds persistent player data
@@ -127,6 +128,8 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private int _currentQuad;
 
+    private PlayerData _playerData;
+
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
@@ -142,14 +145,77 @@ public class PlayerController : MonoBehaviour
         _playerHasControl = true;
     }
 
+    #region Initialization
+
     public void Initialize(PlayerData data)
     {
+        _playerData = data;
         initRewired(data.RewiredPlayerID);
         _isDuplicate = false;
         _currentQuad = getCurrentScreenWrapQuad();
         initDuplicates();
         Balloon.SetActive(true);
     }
+
+    /// <summary>
+    /// Iterate through the object and set its layer to the paramater
+    /// </summary>
+    /// <param name="obj">Object to change it and all children to</param>
+    /// <param name="layer">Layer to put these objects on</param>
+    //private static void setLayerOfObject(Transform obj, int layer)
+    //{
+    //    Stack<Transform> moveTargets = new Stack<Transform>();
+    //    moveTargets.Push(obj);
+
+    //    Transform currentTarget;
+    //    while (moveTargets.Count != 0)
+    //    {
+    //        currentTarget = moveTargets.Pop();
+    //        currentTarget.gameObject.layer = layer;
+    //        foreach (Transform child in currentTarget)
+    //            moveTargets.Push(child);
+    //    }
+    //}
+
+    /// <summary>
+    /// Sets color of engine particles and player name.
+    /// </summary>
+    /// <param name="rewiredPlayerId"></param>
+    /// <param name="playerPrefab"></param>
+    private void setIndicators()
+    {
+        logFormat("Setting up Player: " + _playerData.Name + " | Color: " + _playerData.Color);
+
+        setIndicatorColors();
+        setIndicatorText(_playerData.Name);
+    }
+
+    /// <summary>
+    /// Sets colors for indicator.
+    /// </summary>
+    private void setIndicatorColors()
+    {
+        logFormat("Setting Colors for player: " + _playerData.Name + " | Color: " + _playerData.Color);
+
+        var particlesLeft = transform.Find("Left Prop").Find("Engine Fire_Left").GetComponent<ParticleSystem>().main;
+        var particlesRight = transform.Find("Right Prop").Find("Engine Fire_Right").GetComponent<ParticleSystem>().main;
+        
+        particlesLeft.startColor = _playerData.Color;
+        particlesRight.startColor = _playerData.Color;
+
+        transform.Find("Indicator").Find("Name").GetComponent<Text>().color = _playerData.Color;
+    }
+
+    /// <summary>
+    /// Sets text for indicator.
+    /// </summary>
+    private void setIndicatorText(string text)
+    {
+        logFormat("Setting Text for player: " + _playerData.Name + " | Text: " + text);
+
+        transform.Find("Indicator").Find("Name").GetComponent<Text>().text = text;
+    }
+		
 
     /// <summary>
     /// Initializes this PlayerController as a duplicate controller for a parent PlayerController
@@ -238,6 +304,7 @@ public class PlayerController : MonoBehaviour
                 dupe.SetActive(false);
         }
     }
+    #endregion
 
     /// <summary>
     /// Returns the current quad the player is in
@@ -656,6 +723,7 @@ public class PlayerController : MonoBehaviour
             Constants.RewiredInputActions.Inflate);
     }
 
+    #region Logging
     private void logFormat(string format, params object[] args)
     {
         Debug.LogFormat("[PlayerController] " + format, args);
@@ -670,4 +738,5 @@ public class PlayerController : MonoBehaviour
     {
         Debug.LogErrorFormat("[PlayerController] " + format, args);
     }
+    #endregion
 }
