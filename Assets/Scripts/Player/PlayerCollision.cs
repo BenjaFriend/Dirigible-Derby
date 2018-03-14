@@ -22,7 +22,17 @@ public class PlayerCollision : MonoBehaviour
     /// </summary>
     private RaycastHit2D _rayHit;
 
-	void Update ()
+    /// <summary>
+    /// The attached player controller
+    /// </summary>
+    private PlayerController _player;
+
+    private void Awake()
+    {
+        _player = GetComponent<PlayerController>();
+    }
+
+    void Update ()
     {
         // This should be in fixed update, but because the player controller 
         // does the movement in update we need to do it here as well
@@ -50,7 +60,7 @@ public class PlayerCollision : MonoBehaviour
             // Pop the balloon
             //Destroy(_rayHit.collider.gameObject.transform.parent.gameObject);
             PlayerController player = _rayHit.transform.GetComponentInParent<PlayerController>();
-            player.OnPopped();
+            player.OnPopped(_player);
 
             // TODO: Implement a health system for popping balloons
            

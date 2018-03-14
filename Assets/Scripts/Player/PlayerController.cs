@@ -7,6 +7,8 @@ using UnityEngine.UI;
 /// </summary>
 public class PlayerData
 {
+    public int ID;
+    
     /// <summary>
     /// The Rewired Player ID for this player
     /// </summary>
@@ -25,6 +27,7 @@ public class PlayerData
 
     public PlayerData()
     {
+        ID = -1;
         RewiredPlayerID = -1;
         Active = false;
     }
@@ -129,6 +132,13 @@ public class PlayerController : MonoBehaviour
     private int _currentQuad;
 
     private PlayerData _playerData;
+    public PlayerData PlayerData
+    {
+        get { return _playerData; }
+    }
+
+    public delegate void PlayerPoppedEvent(PlayerController playerPopped, PlayerController otherPlayer);
+    public PlayerPoppedEvent OnPlayerPopped;
 
     private void Awake()
     {
@@ -415,17 +425,18 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Called when this player's balloon is popped by another player
     /// </summary>
-    public void OnPopped()
+    public void OnPopped(PlayerController otherPlayer)
     {
         Balloon.SetActive(false);
 
         if (_isDuplicate)
         {
-            _parent.OnPopped();
+            _parent.OnPopped(otherPlayer);
             return;
         }
 
         SetState(BalloonState.Popped);
+        OnPlayerPopped(this, otherPlayer);
     }
 
     private void Update()

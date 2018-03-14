@@ -54,6 +54,7 @@ public class PlayerLobbyController : SceneController
 
         // set player data (TODO: do this via ui before spawning player)
         playerData.RewiredPlayerID = playerID;
+        playerData.ID = playerIndex;
         playerData.Active = true;
 
         // set sprites (TOOD: should be done via UI)

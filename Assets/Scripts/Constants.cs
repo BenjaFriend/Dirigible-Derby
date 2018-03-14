@@ -66,4 +66,12 @@ public static class Constants
         public const string SpawnPoint = "Spawn Point";
     }
 
+    public static class Gamemodes
+    {
+        public static class Elimination
+        {
+            public const int Lives = 1;
+        }
+    }
+
 }
