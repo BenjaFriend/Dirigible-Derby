@@ -140,6 +140,8 @@ public class PlayerController : MonoBehaviour
     public delegate void PlayerPoppedEvent(PlayerController playerPopped, PlayerController otherPlayer);
     public PlayerPoppedEvent OnPlayerPopped;
 
+    private float _respawnTimer;
+
     private void Awake()
     {
         _body = GetComponent<Rigidbody2D>();
@@ -427,6 +429,12 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     public void OnPopped(PlayerController otherPlayer)
     {
+        if(State == BalloonState.Popped)
+        {
+            logWarningFormat("Can not pop player, already popped!");
+            return;
+        }
+
         Balloon.SetActive(false);
 
         if (_isDuplicate)
@@ -450,11 +458,53 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        // update respawn timer if we are respawning
+        if(_respawnTimer > 0)
+        {
+            _respawnTimer -= Time.deltaTime;
+            if(_respawnTimer <= 0)
+            {
+                Respawn();
+            }
+        }
+
         clampVelo();
         clampRotation();
         updateScreenWrap(lastQuad);
 
         Debug.DrawLine(transform.position, (Vector2)transform.position + _body.velocity, Color.green);
+    }
+
+    public void RespawnDelayed(float delay)
+    {
+        if (_isDuplicate)
+            _parent.RespawnDelayed(delay);
+
+        logFormat("Respawning in {0} seconds... ", delay);
+
+        _respawnTimer = delay;
+    }
+
+    public void Respawn()
+    {
+        Balloon.SetActive(true);
+
+        if (_isDuplicate)
+        {
+            logFormat("Respawning duplicate...");
+            return;
+        }
+
+        if (State != BalloonState.Popped)
+            logWarningFormat("Respawn called, but the player is not popped!");
+
+        logFormat("Respawning player...");
+
+        ResetValues();
+        for (int i = 0; i < _dupes.Length; i++)
+        {
+            _dupes[i].Respawn();
+        }
     }
 
     private void updateDuplicate()
@@ -635,6 +685,7 @@ public class PlayerController : MonoBehaviour
         switch (state)
         {
             case BalloonState.Idle:
+                _targetMinYVelo = BalloonMinYVelo;
                 break;
             case BalloonState.Inflate:
                 if (_body.velocity.y < 0)
@@ -679,6 +730,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case BalloonState.Popped:
                 _playerHasControl = true;
+                DeflateForcer.Force = Vector2.zero;
                 break;
             default:
                 logWarningFormat("No handler for state {0} in _onStateExit, did you forget to add it to the switch statement?", Enum.GetName(typeof(BalloonState), state));

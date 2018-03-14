@@ -70,7 +70,8 @@ public static class Constants
     {
         public static class Elimination
         {
-            public const int Lives = 1;
+            public const int Lives = 3;
+            public const float RespawnTime = 3f;
         }
     }
 

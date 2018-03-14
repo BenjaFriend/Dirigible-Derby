@@ -49,11 +49,14 @@ public class EliminationGamemode : Gamemode
         int index = playerPopped.PlayerData.ID;
 
         // lose a life
-        PlayerLives[index]--;
+        _playerLives[index]--;
+
+        logFormat("Player {0} popped! {1} lives left", index, _playerLives[index]);
 
         if(isPlayerAlive(index))
         {
             // respawn player
+            playerPopped.RespawnDelayed(Constants.Gamemodes.Elimination.RespawnTime);
         }
         else
         {
@@ -78,4 +81,21 @@ public class EliminationGamemode : Gamemode
     {
         return _playerLives[index] > 0;
     }
+
+    #region Logging
+    private void logFormat(string format, params object[] args)
+    {
+        Debug.LogFormat("[EliminationGamemode] " + format, args);
+    }
+
+    private void logWarningFormat(string format, params object[] args)
+    {
+        Debug.LogWarningFormat("[EliminationGamemode] " + format, args);
+    }
+
+    private void logErrorFormat(string format, params object[] args)
+    {
+        Debug.LogErrorFormat("[EliminationGamemode] " + format, args);
+    }
+    #endregion
 }
