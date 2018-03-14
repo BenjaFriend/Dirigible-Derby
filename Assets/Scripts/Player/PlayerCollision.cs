@@ -53,8 +53,14 @@ public class PlayerCollision : MonoBehaviour
             player.OnPopped();
 
             // TODO: Implement a health system for popping balloons
-           
-            Debug.Log("HIT : " + _rayHit.collider.name + "Layer: " + _rayHit.collider.gameObject.layer.ToString());
+            // There will need to be a health value for each player
+            // The game manager will handle how many lives are left for each player
+            // A quick dictionary of player ID's and a score
+            // On popped will send an event that the game manager will listen to, that will
+            // remove a life from  player and then update the health UI 
+
+
+            Debug.Log("[PlayerCollision] HIT : " + _rayHit.collider.name + "Layer: " + _rayHit.collider.gameObject.layer.ToString());
         }
     }
 }

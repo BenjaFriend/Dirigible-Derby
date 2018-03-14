@@ -103,28 +103,28 @@ public class PressStartToJoin : MonoBehaviour
             case 1:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_1_Layer);
                 player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[1];
-
                 break;
             case 2:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_2_Layer);
-                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[2];
-
+                player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[2];    
                 break;
             case 3:
                 setLayerOfObject(player.transform, Constants.PlayerPhysicsLayers.Player_3_Layer);
                 player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[3];
-
                 break;
             default:
                 Debug.Log("There is no player physics layer for index " + rewiredPlayerId.ToString());
                 player.GetComponent<QuickPlayerSprites>().balloonSprite.sprite = balloonSprites[0];
-
                 break;
         }
 
         // give the rewired index
-        player.Initialize(new PlayerData(rewiredPlayerId));
+        PlayerData pData = new PlayerData(rewiredPlayerId);
+        player.Initialize(pData);
 
+        // Give this data to the game manager
+        GameManager.Instance.PlayerData.Add(rewiredPlayerId, pData);
+        
         _activePlayers.Add(rewiredPlayerId);
     }
 

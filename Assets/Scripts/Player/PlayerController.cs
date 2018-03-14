@@ -4,13 +4,28 @@ using UnityEngine;
 /// <summary>
 /// Holds player initialization data
 /// </summary>
-public struct PlayerData
+public class PlayerData
 {
     public int RewiredPlayerID;
+    private int _health;
 
     public PlayerData(int rewiredPlayerID)
     {
         RewiredPlayerID = rewiredPlayerID;
+        _health = 3;
+    }
+
+    public int Health
+    {
+        get
+        {
+            return _health;
+        }
+
+        set
+        {
+            _health = value;
+        }
     }
 }
 
@@ -19,6 +34,9 @@ public class PlayerController : MonoBehaviour
     public Forcer BalloonForcer;
     public Forcer DeflateForcer;
     public Forcer LeftProp, RightProp;
+
+    public delegate void PlayerPoppedAction(int playerId);
+    public static event PlayerPoppedAction OnPlayerPopped;
 
     /// <summary>
     /// How fast the basket can rise with the balloon attached
@@ -342,6 +360,12 @@ public class PlayerController : MonoBehaviour
         }
 
         SetState(BalloonState.Popped);
+
+        // Tell the game manager that we have popped
+        if(OnPlayerPopped != null)
+        {
+            OnPlayerPopped(_rewired.id);
+        }
     }
 
     private void Update()

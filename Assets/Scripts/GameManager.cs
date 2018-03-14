@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// Singleton controller for players, game state, and gamemode
@@ -11,11 +12,20 @@ public class GameManager : MonoBehaviour
         get { return _instance; }
     }
 
-    public PlayerData[] PlayerData;
+    //public PlayerData[] PlayerData;
+
+    private Dictionary<int, PlayerData> _playerData;
+
+    public Dictionary<int, PlayerData> PlayerData;
 
     private void Awake()
     {
         setInstanceOrDestroySelf();
+
+        _playerData = new Dictionary<int, PlayerData>();
+
+        // TODO: Add delegates for the UI
+        AddListeners();
     }
 
     /// <summary>
@@ -33,5 +43,25 @@ public class GameManager : MonoBehaviour
 
         _instance = this;
         DontDestroyOnLoad(this);
+    }
+
+    private void AddListeners()
+    {
+        PlayerController.OnPlayerPopped += PlayerPopped;
+    }
+
+    private void RemoveListeners()
+    {
+        PlayerController.OnPlayerPopped -= PlayerPopped;
+    }
+
+    private void OnDisable()
+    {
+        RemoveListeners();
+    }
+
+    private void PlayerPopped(int pId)
+    {
+        _playerData[pId].Health--;
     }
 }
