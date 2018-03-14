@@ -47,7 +47,7 @@ public class PlayerLobbyController : SceneController
         int playerIndex = _activePlayerCount - 1;
 
         // stop listening for join game press
-        Rewired.ReInput.players.GetPlayer(playerID).RemoveInputEventDelegate(onJoinGamePressedEvent);
+        //Rewired.ReInput.players.GetPlayer(playerID).RemoveInputEventDelegate(onJoinGamePressedEvent);
 
         // get playerdata from game manager, or create new playerdata instance if this player is null in gm
         PlayerData playerData = GameManager.Instance.PlayerData[playerIndex] ?? new PlayerData();
@@ -72,6 +72,15 @@ public class PlayerLobbyController : SceneController
         return _activePlayers[playerID];
     }
 
+    /// <summary>
+    /// Leave the player lobby and go to the game
+    /// </summary>
+    private void startGame()
+    {
+        //TODO: remove hardcoded game scene
+        GameManager.Instance.ChangeScene(Constants.Scenes.Playtesting);
+    }
+
     #region Rewired Delegates
 
     private void addRewiredDelegates()
@@ -93,14 +102,17 @@ public class PlayerLobbyController : SceneController
         // stop listening for join game pressed for all inactive players
         for (int i = 0; i < Rewired.ReInput.players.playerCount; i++)
         {
-            if (!isPlayerActive(i))
+            //if (!isPlayerActive(i))
                 Rewired.ReInput.players.GetPlayer(i).RemoveInputEventDelegate(onJoinGamePressedEvent);
         }
     }
 
     private void onJoinGamePressedEvent(Rewired.InputActionEventData data)
     {
-        activatePlayer(data.playerId);
+        if (!isPlayerActive(data.playerId))
+            activatePlayer(data.playerId);
+        else // start game (TODO: probably want a different system for this)
+            startGame();
     }
 
     #endregion

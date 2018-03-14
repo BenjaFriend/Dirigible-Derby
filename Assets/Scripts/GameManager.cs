@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < PlayerData.Length; i++)
         {
-            if (PlayerData[i].Active)
+            if (PlayerData[i] != null && PlayerData[i].Active)
                 SpawnPlayer(i);
         }
     }
