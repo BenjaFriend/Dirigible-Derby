@@ -31,6 +31,11 @@ public class MenuScript : MonoBehaviour
         loadScene(Constants.Scenes.Playtesting);
     }
 
+    public void LoadCredits()
+    {
+        loadScene(Constants.Scenes.Credits);
+    }
+
     /// <summary>
     /// Calls Application.quit
     /// </summary>
