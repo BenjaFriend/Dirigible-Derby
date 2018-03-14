@@ -4,6 +4,11 @@ using UnityEngine;
 
 public static class Constants
 {
+    public static class PlayerLobby
+    {
+        public const int MaxPlayers = 4;
+    }
+
     public static class RewiredInputActions
     {
         public const string JoinGame = "JoinGame";
