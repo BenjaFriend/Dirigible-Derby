@@ -1,13 +1,29 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Spawns players when they press the JoinGame button with Rewired delegates.
+/// Calls the GameManager to spawn those objects.
+/// </summary>
 public class PlayerLobbyController : SceneController
 {
     #region Fields
-
+    /// <summary>
+    /// This is an object that says something like "Press Start to join" or something like that.
+    /// Will be diabled when all players have joined the lobby
+    /// </summary>
+    public GameObject JoinUIObject;
+    
+    [Space(10)]
+    [Header("Player attributes")]
     public Sprite[] BalloonSprites;
     public string[] PlayerNames;
     public Color[] PlayerColors;
+
+    [Space(10)]
+    [Header("Debug Info")]
+    [SerializeField]
+    [Tooltip("If false this script will not log and debug information")]
+    private bool _showDebugLogs = true;
 
     /// <summary>
     /// List of what players have been added to the game to prevent the same player joining twice
@@ -66,6 +82,12 @@ public class PlayerLobbyController : SceneController
 
         // spawn player (TODO: this should happen after the player is done customizing)
         GameManager.Instance.SpawnPlayer(playerIndex);
+
+        // Set the join UI object as disabled
+        if(_activePlayerCount >= Constants.PlayerLobby.MaxPlayers && JoinUIObject != null)
+        {
+            JoinUIObject.SetActive(false);
+        }
     }
 
     private bool isPlayerActive(int playerID)
@@ -121,6 +143,7 @@ public class PlayerLobbyController : SceneController
     #region Logging
     private void logWarningFormat(string format, params object[] args)
     {
+        if (!_showDebugLogs) return;
 #if UNITY_EDITOR
         Debug.LogWarningFormat("[PlayerLobbyController] " + format, args);
 #endif
@@ -128,6 +151,8 @@ public class PlayerLobbyController : SceneController
 
     private void logErrorFormat(string format, params object[] args)
     {
+        if (!_showDebugLogs) return;
+
 #if UNITY_EDITOR
         Debug.LogErrorFormat("[PlayerLobbyController] " + format, args);
 #endif
@@ -135,6 +160,8 @@ public class PlayerLobbyController : SceneController
 
     private void logFormat(string format, params object[] args)
     {
+        if (!_showDebugLogs) return;
+
 #if UNITY_EDITOR
         Debug.LogFormat("[PlayerLobbyController] " + format, args);
 #endif
