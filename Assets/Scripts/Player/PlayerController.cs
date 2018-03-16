@@ -55,9 +55,8 @@ public class PlayerController : MonoBehaviour
     public Forcer DeflateForcer;
     public Forcer LeftProp, RightProp;
 
-    //public delegate void PlayerPoppedAction(int playerId);
-    //public static event PlayerPoppedAction OnPlayerPopped;
-
+    public Animator BalloonPopAnimation;
+    
     /// <summary>
     /// How fast the basket can rise with the balloon attached
     /// </summary>
@@ -456,6 +455,12 @@ public class PlayerController : MonoBehaviour
 
         Balloon.SetActive(false);
 
+        // Play the popped animation
+        if(BalloonPopAnimation != null)
+        {
+            BalloonPopAnimation.SetTrigger("Pop");
+        }
+
         if (_isDuplicate)
         {
             _parent.OnPopped(otherPlayer);
@@ -464,11 +469,6 @@ public class PlayerController : MonoBehaviour
 
         SetState(BalloonState.Popped);
 
-        //// Tell the game manager that we have popped
-        //if(OnPlayerPopped != null)
-        //{
-        //    OnPlayerPopped(_rewired.id);
-        //}
         OnPlayerPopped(this, otherPlayer);
     }
 
@@ -513,6 +513,12 @@ public class PlayerController : MonoBehaviour
     public void Respawn()
     {
         Balloon.SetActive(true);
+
+        // Reset the animation
+        if (BalloonPopAnimation != null)
+        {
+            BalloonPopAnimation.ResetTrigger("Pop");
+        }
 
         if (_isDuplicate)
         {
