@@ -75,4 +75,5 @@ public static class Constants
         }
     }
 
+    public const string WinText = "{0} Wins!";
 }

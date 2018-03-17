@@ -75,7 +75,14 @@ public class EliminationGamemode : Gamemode
 
     private void gameOver()
     {
-        gameSceneController.GameOver();
+        PlayerController winner = null;
+        for (int i = 0; i < Constants.PlayerLobby.MaxPlayers; i++)
+        {
+            if (_playerLives[i] > 0)
+                winner = gameManager.Players[i];
+        }
+
+        gameSceneController.GameOver(winner);
     }
 
     /// <summary>

@@ -11,6 +11,9 @@ public class GameSceneController : SceneController
     {
         get { return _gameOver; }
     }
+
+    public delegate void OnGameWonEvent(PlayerController winner);
+    public OnGameWonEvent OnGameWon;
     
     public override void OnControllerActivated()
     {
@@ -37,10 +40,10 @@ public class GameSceneController : SceneController
         Gamemode.Unload();
     }
 
-    public void GameOver()
+    public void GameOver(PlayerController winner)
     {
         _gameOver = true;
         Debug.Log("Game over!");
-        //TODO: OnGameOver delegate
+        OnGameWon(winner);
     }
 }

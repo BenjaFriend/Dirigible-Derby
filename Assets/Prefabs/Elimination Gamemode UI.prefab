@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 223950243756491906}
   - component: {fileID: 114099262607493650}
   - component: {fileID: 114632404890213956}
+  - component: {fileID: 114194476487184776}
   m_Layer: 5
   m_Name: Elimination Gamemode UI
   m_TagString: Untagged
@@ -109,6 +110,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 224169449019533724}
+  - component: {fileID: 114927495806276900}
   m_Layer: 5
   m_Name: P1 Stats
   m_TagString: Untagged
@@ -196,6 +198,18 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+--- !u!114 &114194476487184776
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1827657072553780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6173a7e9cfadd7498bb07591d4f12ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Spacing: 115
 --- !u!114 &114263583156374204
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -355,6 +369,25 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114927495806276900
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1875577504958568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e93dbdbb35f037c438a5c9bb2cc03538, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: {fileID: 114263583156374204}
+  Background: {fileID: 114749168857526926}
+  Hearts:
+  - {fileID: 114646179622743470}
+  - {fileID: 114959246308130976}
+  - {fileID: 114011450405939070}
+  HeartActiveAlpha: 1
+  HeartInactiveAlpha: 0.3
 --- !u!114 &114959246308130976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -448,7 +481,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 225}
+  m_AnchoredPosition: {x: 0, y: 29.64}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224263366374841662
