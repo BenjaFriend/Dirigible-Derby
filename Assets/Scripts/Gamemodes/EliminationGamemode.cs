@@ -14,6 +14,9 @@ public class EliminationGamemode : Gamemode
 
     private int _playersAlive;
 
+    public delegate void OnPlayerHealthChangedEvent(PlayerController p);
+    public OnPlayerHealthChangedEvent OnPlayerHealthChanged;
+
     public EliminationGamemode(GameSceneController parent) 
         : base(parent, GamemodeType.Elimination) { }
 
@@ -50,6 +53,7 @@ public class EliminationGamemode : Gamemode
 
         // lose a life
         _playerLives[index]--;
+        OnPlayerHealthChanged(playerPopped);
 
         logFormat("Player {0} popped! {1} lives left", index, _playerLives[index]);
 
@@ -71,7 +75,14 @@ public class EliminationGamemode : Gamemode
 
     private void gameOver()
     {
-        gameSceneController.GameOver();
+        PlayerController winner = null;
+        for (int i = 0; i < Constants.PlayerLobby.MaxPlayers; i++)
+        {
+            if (_playerLives[i] > 0)
+                winner = gameManager.Players[i];
+        }
+
+        gameSceneController.GameOver(winner);
     }
 
     /// <summary>
