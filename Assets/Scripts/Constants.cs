@@ -4,6 +4,11 @@ using UnityEngine;
 
 public static class Constants
 {
+    public static class PlayerLobby
+    {
+        public const int MaxPlayers = 4;
+    }
+
     public static class RewiredInputActions
     {
         public const string JoinGame = "JoinGame";
@@ -50,10 +55,25 @@ public static class Constants
 
     public static class Scenes
     {
-        public const string InputTesting = "InputTesting";
-        public const string MainMenu = "Menu";
+        public const string MainMenu = "MainMenu";
+        public const string PlayerLobby = "PlayerLobby";
         public const string Playtesting = "Playtesting";
-
+        public const string Credits = "Credits";
     }
 
+    public static class Tags
+    {
+        public const string SpawnPoint = "Spawn Point";
+    }
+
+    public static class Gamemodes
+    {
+        public static class Elimination
+        {
+            public const int Lives = 3;
+            public const float RespawnTime = 3f;
+        }
+    }
+
+    public const string WinText = "{0} Wins!";
 }
