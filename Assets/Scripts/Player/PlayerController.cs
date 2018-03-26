@@ -469,6 +469,8 @@ public class PlayerController : MonoBehaviour
 
         SetState(BalloonState.Popped);
 
+        _dupes[_currentQuad].OnPopped(otherPlayer);
+
         OnPlayerPopped(this, otherPlayer);
     }
 
