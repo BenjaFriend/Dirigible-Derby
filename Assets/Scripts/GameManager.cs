@@ -1,5 +1,5 @@
 
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 
@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
     {
         get { return _playerCount; }
     }
-    
+
     public GameObject PlayerPrefab;
 
     private Transform[] _spawnPoints;
@@ -51,6 +51,22 @@ public class GameManager : MonoBehaviour
     {
         get { return _spawnPoints; }
     }
+
+    private bool _paused;
+    /// <summary>
+    /// Whether or not the game is paused
+    /// </summary>
+    public bool IsPaused
+    {
+        get { return _paused; }
+    }
+
+    public delegate void PauseEvent();
+    public PauseEvent OnPause;
+    public PauseEvent OnUnpause;
+
+    public delegate void SceneChangeEvent();
+    public SceneChangeEvent OnSceneChange;
 
     #region SceneController
     /// <summary>
@@ -111,6 +127,9 @@ public class GameManager : MonoBehaviour
         if (SceneHasController)
             DeactivateCurrentController();
 
+        if (OnSceneChange != null)
+            OnSceneChange();
+
         // clear players array
         _players = new PlayerController[Constants.PlayerLobby.MaxPlayers];
 
@@ -167,6 +186,22 @@ public class GameManager : MonoBehaviour
         // TODO: OnPlayerDataChanged delegate
     }
 
+    public void Pause()
+    {
+        _paused = true;
+
+        if (OnPause != null)
+            OnPause();
+    }
+
+    public void Unpause()
+    {
+        _paused = false;
+
+        if (OnUnpause != null)
+            OnUnpause();
+    }
+
     /// <summary>
     /// Called whenever player data changes, counts active and non null players
     /// </summary>
@@ -175,7 +210,7 @@ public class GameManager : MonoBehaviour
         _playerCount = 0;
         for (int i = 0; i < PlayerData.Length; i++)
         {
-            if(PlayerData[i] != null && PlayerData[i].Active)
+            if (PlayerData[i] != null && PlayerData[i].Active)
             {
                 _playerCount++;
             }
