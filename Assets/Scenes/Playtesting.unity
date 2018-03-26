@@ -141,6 +141,24 @@ Transform:
   m_Father: {fileID: 1598661136}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &289061791 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 160602, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+  m_PrefabInternal: {fileID: 1781263756}
+--- !u!114 &289061792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 289061791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.472}
+  m_EffectDistance: {x: 0.4, y: -0.6}
+  m_UseGraphicAlpha: 1
 --- !u!1 &327692893
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,9 +1249,81 @@ Prefab:
       propertyPath: m_TagString
       value: Obstacles
       objectReference: {fileID: 0}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Text
+      value: v5
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 19d34e7bcde85ce4cb97b51193f3ad4a,
+        type: 3}
+    - target: {fileID: 11420374, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: 19d34e7bcde85ce4cb97b51193f3ad4a,
+        type: 3}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_FontData.m_FontSize
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420374, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_FontData.m_FontSize
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420374, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11482520, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420374, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420374, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11420374, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1789185607 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 198724, guid: b4b1040acd904e84980d29fb7708057e, type: 2}
+  m_PrefabInternal: {fileID: 1781263756}
+--- !u!114 &1789185608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1789185607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -900027084, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0, g: 0, b: 0, a: 0.472}
+  m_EffectDistance: {x: 0.4, y: -0.6}
+  m_UseGraphicAlpha: 1
 --- !u!1 &1904348278
 GameObject:
   m_ObjectHideFlags: 0
