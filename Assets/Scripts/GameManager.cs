@@ -189,6 +189,7 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         _paused = true;
+        Time.timeScale = 0;
 
         if (OnPause != null)
             OnPause();
@@ -197,6 +198,7 @@ public class GameManager : MonoBehaviour
     public void Unpause()
     {
         _paused = false;
+        Time.timeScale = 1;
 
         if (OnUnpause != null)
             OnUnpause();
