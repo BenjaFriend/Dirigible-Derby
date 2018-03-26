@@ -12,12 +12,15 @@ public class PlayerLobbyController : SceneController
     /// Will be diabled when all players have joined the lobby
     /// </summary>
     public GameObject JoinUIObject;
-    
+
     [Space(10)]
     [Header("Player attributes")]
     public Sprite[] BalloonSprites;
     public string[] PlayerNames;
     public Color[] PlayerColors;
+    public SpriteRenderer[] PlayerReadyIndicators;
+    public Color ReadyIndicatorColor = Color.green;
+    public Color UnreadyIndicatorColor = Color.white;
 
     [Space(10)]
     [Header("Debug Info")]
@@ -30,13 +33,21 @@ public class PlayerLobbyController : SceneController
     /// </summary>
     private bool[] _activePlayers;
 
+    /// <summary>
+    /// List of what players have confirmed that they are ready to start the 
+    /// </summary>
+    private bool[] _readyPlayers;
+
+
     private int _activePlayerCount;
+    private int _readyPlayerCount;
 
     #endregion
 
     public override void OnControllerActivated()
     {
         _activePlayers = new bool[Constants.PlayerLobby.MaxPlayers];
+        _readyPlayers = new bool[Constants.PlayerLobby.MaxPlayers];
 
         // find spawn points and tell gm
         GameManager.Instance.SetSpawnPoints(GameObject.FindGameObjectsWithTag(Constants.Tags.SpawnPoint));
@@ -84,7 +95,7 @@ public class PlayerLobbyController : SceneController
         GameManager.Instance.SpawnPlayer(playerIndex);
 
         // Set the join UI object as disabled
-        if(_activePlayerCount >= Constants.PlayerLobby.MaxPlayers && JoinUIObject != null)
+        if (_activePlayerCount >= Constants.PlayerLobby.MaxPlayers && JoinUIObject != null)
         {
             JoinUIObject.SetActive(false);
         }
@@ -95,6 +106,14 @@ public class PlayerLobbyController : SceneController
         return _activePlayers[playerID];
     }
 
+    private bool isPlayerReady(int playerID)
+    {
+        // Ensure that this number is within the range of our array just in case
+        if (playerID < 0 || playerID > Constants.PlayerLobby.MaxPlayers) return false;
+
+        return _readyPlayers[playerID];
+    }
+
     /// <summary>
     /// Leave the player lobby and go to the game
     /// </summary>
@@ -102,6 +121,46 @@ public class PlayerLobbyController : SceneController
     {
         //TODO: remove hardcoded game scene
         GameManager.Instance.ChangeScene(Constants.Scenes.Playtesting);
+    }
+
+    /// <summary>
+    /// Sets this player index as ready.
+    /// If all players are now ready, then start the game
+    /// </summary>
+    private void readyPlayer(int rewiredId)
+    {
+        // Check if all players are ready
+        _readyPlayers[rewiredId] = true;
+        _readyPlayerCount++;
+
+        // Set the little sprite as green
+        if (PlayerReadyIndicators[rewiredId] != null)
+        {
+            PlayerReadyIndicators[rewiredId].color = ReadyIndicatorColor;
+        }
+
+        // Check if we need to star the game
+        if (_readyPlayerCount >= _activePlayerCount)
+        {
+            startGame();
+        }
+    }
+
+    /// <summary>
+    /// Sets this player index as not ready.
+    /// </summary>
+    private void unreadyPlayer(int rewiredId)
+    {
+        _readyPlayers[rewiredId] = false;
+        _readyPlayerCount--;
+
+        // Set the indicator back to white
+        if(PlayerReadyIndicators[rewiredId] != null)
+        {
+            PlayerReadyIndicators[rewiredId].color = UnreadyIndicatorColor;
+        }
+
+        // Cancel the countdown here if we need to!
     }
 
     #region Rewired Delegates
@@ -117,6 +176,13 @@ public class PlayerLobbyController : SceneController
                 Rewired.InputActionEventType.ButtonJustPressed,
                 Constants.RewiredInputActions.JoinGame
                 );
+
+            Rewired.ReInput.players.GetPlayer(i).AddInputEventDelegate(
+                onCancelPressedEvent,
+                Rewired.UpdateLoopType.Update,
+                Rewired.InputActionEventType.ButtonJustPressed,
+                Constants.RewiredInputActions.Cancel
+                );
         }
     }
 
@@ -125,17 +191,29 @@ public class PlayerLobbyController : SceneController
         // stop listening for join game pressed for all inactive players
         for (int i = 0; i < Rewired.ReInput.players.playerCount; i++)
         {
-            //if (!isPlayerActive(i))
-                Rewired.ReInput.players.GetPlayer(i).RemoveInputEventDelegate(onJoinGamePressedEvent);
+            Rewired.ReInput.players.GetPlayer(i).RemoveInputEventDelegate(onJoinGamePressedEvent);
+            Rewired.ReInput.players.GetPlayer(i).RemoveInputEventDelegate(onCancelPressedEvent);
         }
     }
 
     private void onJoinGamePressedEvent(Rewired.InputActionEventData data)
     {
         if (!isPlayerActive(data.playerId))
+        {
             activatePlayer(data.playerId);
-        else // start game (TODO: probably want a different system for this)
-            startGame();
+        }
+        else if(!isPlayerReady(data.playerId))
+        {
+            readyPlayer(data.playerId);
+        }
+    }
+
+    private void onCancelPressedEvent(Rewired.InputActionEventData data)
+    {
+        if(isPlayerReady(data.playerId))
+        {
+            unreadyPlayer(data.playerId);
+        }
     }
 
     #endregion

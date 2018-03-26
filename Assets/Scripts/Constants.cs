@@ -12,6 +12,7 @@ public static class Constants
     public static class RewiredInputActions
     {
         public const string JoinGame = "JoinGame";
+        public const string Cancel = "Cancel";
         public const string Deflate = "Deflate";
         public const string Inflate = "Inflate";
         public const string LeftTrigger = "LeftTrigger";
