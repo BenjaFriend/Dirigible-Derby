@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     public Forcer LeftProp, RightProp;
 
     public Animator BalloonPopAnimation;
+    public AudioClip BalloonPop;
     
     /// <summary>
     /// How fast the basket can rise with the balloon attached
@@ -452,7 +453,7 @@ public class PlayerController : MonoBehaviour
             logWarningFormat("Can not pop player, already popped!");
             return;
         }
-
+        
         Balloon.SetActive(false);
 
         // Play the popped animation
@@ -466,6 +467,8 @@ public class PlayerController : MonoBehaviour
             _parent.OnPopped(otherPlayer);
             return;
         }
+        
+        AudioManager.Instance.PlayOneShot(BalloonPop, AudioPoolType.SFX, Constants.Mixer.MixerGroups.Master.SFX.Name);
 
         SetState(BalloonState.Popped);
 

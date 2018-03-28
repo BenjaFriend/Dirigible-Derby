@@ -17,3 +17,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Credits.unity
     guid: 346b159053c31824ababfeb8ce2d334b
+  - enabled: 1
+    path: Assets/Scenes/PlayerLobby.unity
+    guid: fbb0e093b16981c419b6a2f8ad81d690

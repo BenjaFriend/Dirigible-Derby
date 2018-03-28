@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 
 /// <summary>
 /// Spawns players when they press the JoinGame button with Rewired delegates.
@@ -50,7 +51,10 @@ public class PlayerLobbyController : SceneController
         _readyPlayers = new bool[Constants.PlayerLobby.MaxPlayers];
 
         // find spawn points and tell gm
-        GameManager.Instance.SetSpawnPoints(GameObject.FindGameObjectsWithTag(Constants.Tags.SpawnPoint));
+        var spawnPoints = GameObject.FindGameObjectsWithTag(Constants.Tags.SpawnPoint);
+        var spawnPointsOrdered = spawnPoints.OrderBy(a => a.name).ToArray();
+
+        GameManager.Instance.SetSpawnPoints(spawnPointsOrdered);
 
         addRewiredDelegates();
     }

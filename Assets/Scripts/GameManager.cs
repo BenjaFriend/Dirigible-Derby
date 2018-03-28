@@ -147,6 +147,9 @@ public class GameManager : MonoBehaviour
         // init arrays
         _playerData = new PlayerData[Constants.PlayerLobby.MaxPlayers];
         _players = new PlayerController[Constants.PlayerLobby.MaxPlayers];
+
+        AudioManager.Instance.SetPoolSize(AudioPoolType.Music, Constants.AudioPoolSize.Music);
+        AudioManager.Instance.SetPoolSize(AudioPoolType.SFX, Constants.AudioPoolSize.SFX);
     }
 
     /// <summary>
@@ -256,7 +259,8 @@ public class GameManager : MonoBehaviour
 
 
         // spawn player at point
-        GameObject playerObj = Instantiate<GameObject>(PlayerPrefab, SpawnPoints[playerNum]);
+        GameObject playerObj = Instantiate<GameObject>(PlayerPrefab);
+        playerObj.transform.position = SpawnPoints[playerNum].position;
         PlayerController player = playerObj.GetComponent<PlayerController>();
 
         // initialize player

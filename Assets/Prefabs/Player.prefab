@@ -1002,6 +1002,7 @@ MonoBehaviour:
   LeftProp: {fileID: 114046234562325746}
   RightProp: {fileID: 114705196184513898}
   BalloonPopAnimation: {fileID: 95628301787537098}
+  BalloonPop: {fileID: 8300000, guid: 4f93d5cfe71903546b43cd9896eec64d, type: 3}
   BalloonMaxYVelo: 10
   BalloonMinYVelo: -2
   DeflateMinYVelo: -12
