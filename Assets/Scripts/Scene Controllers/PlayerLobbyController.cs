@@ -218,6 +218,10 @@ public class PlayerLobbyController : SceneController
         {
             unreadyPlayer(data.playerId);
         }
+        else
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene("MainMenu");
+        }
     }
 
     #endregion
