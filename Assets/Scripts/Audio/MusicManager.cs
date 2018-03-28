@@ -11,7 +11,6 @@ public class MusicManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
         if (_source == null)
             _source = AudioManager.Instance.Play(Song, AudioPoolType.Music, Constants.Mixer.MixerGroups.Master.BackgroundMusic.Name, true, () => { _source = null; });
     }
