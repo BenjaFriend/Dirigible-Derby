@@ -58,7 +58,7 @@ public static class Constants
     {
         public const string MainMenu = "MainMenu";
         public const string PlayerLobby = "PlayerLobby";
-        public const string Playtesting = "Playtesting";
+        public const string Playtesting = "Level01";
         public const string Credits = "Credits";
     }
 

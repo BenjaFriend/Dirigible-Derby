@@ -31,6 +31,8 @@ public class PauseMenuController : MonoBehaviour
 
     public void OnQuitButtonPressed()
     {
+        GameManager.Instance.Unpause();
+
         // maybe we should have a confirmation screen?
         GameManager.Instance.ChangeScene(Constants.Scenes.PlayerLobby);
     }
@@ -62,7 +64,7 @@ public class PauseMenuController : MonoBehaviour
     private void deactivate()
     {
         gameObject.SetActive(false);
-    }
+    }        
 
     private void onSceneChange()
     {
@@ -71,5 +73,8 @@ public class PauseMenuController : MonoBehaviour
         {
             Rewired.ReInput.players.GetPlayer(i).RemoveInputEventDelegate(onStartPressedEvent);
         }
+
+        GameManager.Instance.OnUnpause -= deactivate;
+        GameManager.Instance.OnSceneChange -= onSceneChange;
     }
 }

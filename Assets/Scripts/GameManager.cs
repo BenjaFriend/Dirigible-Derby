@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
 
         // clear players array
         _players = new PlayerController[Constants.PlayerLobby.MaxPlayers];
-
+        
         SceneManager.LoadScene(nextScene);
     }
 
