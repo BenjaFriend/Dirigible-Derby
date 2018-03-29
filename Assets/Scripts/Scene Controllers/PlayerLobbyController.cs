@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Linq;
+using System.Collections.Generic;
 
 /// <summary>
 /// Spawns players when they press the JoinGame button with Rewired delegates.
@@ -32,12 +33,17 @@ public class PlayerLobbyController : SceneController
     /// <summary>
     /// List of what players have been added to the game to prevent the same player joining twice
     /// </summary>
-    private bool[] _activePlayers;
+    private Dictionary<int, bool> _activePlayers;
 
     /// <summary>
     /// List of what players have confirmed that they are ready to start the 
     /// </summary>
-    private bool[] _readyPlayers;
+    private Dictionary<int, bool> _readyPlayers;
+
+    /// <summary>
+    /// Player data by rewiredID
+    /// </summary>
+    private Dictionary<int, PlayerData> _playerData;
 
 
     private int _activePlayerCount;
@@ -47,8 +53,9 @@ public class PlayerLobbyController : SceneController
 
     public override void OnControllerActivated()
     {
-        _activePlayers = new bool[Constants.PlayerLobby.MaxPlayers];
-        _readyPlayers = new bool[Constants.PlayerLobby.MaxPlayers];
+        _readyPlayers = new Dictionary<int, bool>();
+        _activePlayers = new Dictionary<int, bool>();
+        _playerData = new Dictionary<int, PlayerData>();
 
         // find spawn points and tell gm
         var spawnPoints = GameObject.FindGameObjectsWithTag(Constants.Tags.SpawnPoint);
@@ -72,7 +79,11 @@ public class PlayerLobbyController : SceneController
             return;
         }
 
-        _activePlayers[playerID] = true;
+        if (!_activePlayers.ContainsKey(playerID))
+            _activePlayers.Add(playerID, true);
+        else
+            _activePlayers[playerID] = true;
+
         _activePlayerCount++;
 
         int playerIndex = _activePlayerCount - 1;
@@ -98,6 +109,16 @@ public class PlayerLobbyController : SceneController
         // spawn player (TODO: this should happen after the player is done customizing)
         GameManager.Instance.SpawnPlayer(playerIndex);
 
+        // add to playerdata list
+        if (!_playerData.ContainsKey(playerID))
+        {
+            _playerData.Add(playerID, playerData);
+        }
+        else
+        {
+            _playerData[playerID] = playerData;
+        }
+
         // Set the join UI object as disabled
         if (_activePlayerCount >= Constants.PlayerLobby.MaxPlayers && JoinUIObject != null)
         {
@@ -107,7 +128,7 @@ public class PlayerLobbyController : SceneController
 
     private bool isPlayerActive(int playerID)
     {
-        return _activePlayers[playerID];
+        return _activePlayers.ContainsKey(playerID) && _activePlayers[playerID];
     }
 
     private bool isPlayerReady(int playerID)
@@ -115,7 +136,7 @@ public class PlayerLobbyController : SceneController
         // Ensure that this number is within the range of our array just in case
         if (playerID < 0 || playerID > Constants.PlayerLobby.MaxPlayers) return false;
 
-        return _readyPlayers[playerID];
+        return _readyPlayers.ContainsKey(playerID) && _readyPlayers[playerID];
     }
 
     /// <summary>
@@ -134,13 +155,18 @@ public class PlayerLobbyController : SceneController
     private void readyPlayer(int rewiredId)
     {
         // Check if all players are ready
-        _readyPlayers[rewiredId] = true;
+        if (!_readyPlayers.ContainsKey(rewiredId))
+            _readyPlayers.Add(rewiredId, true);
+        else
+            _readyPlayers[rewiredId] = true;
+
         _readyPlayerCount++;
+        int playerIndex = _playerData[rewiredId].ID;
 
         // Set the little sprite as green
-        if (PlayerReadyIndicators[rewiredId] != null)
+        if (PlayerReadyIndicators[playerIndex] != null)
         {
-            PlayerReadyIndicators[rewiredId].color = ReadyIndicatorColor;
+            PlayerReadyIndicators[playerIndex].color = ReadyIndicatorColor;
         }
 
         // Check if we need to star the game
@@ -156,12 +182,15 @@ public class PlayerLobbyController : SceneController
     private void unreadyPlayer(int rewiredId)
     {
         _readyPlayers[rewiredId] = false;
+
         _readyPlayerCount--;
 
+        int playerIndex = _playerData[rewiredId].ID;
+
         // Set the indicator back to white
-        if(PlayerReadyIndicators[rewiredId] != null)
+        if (PlayerReadyIndicators[playerIndex] != null)
         {
-            PlayerReadyIndicators[rewiredId].color = UnreadyIndicatorColor;
+            PlayerReadyIndicators[playerIndex].color = UnreadyIndicatorColor;
         }
 
         // Cancel the countdown here if we need to!
@@ -206,7 +235,7 @@ public class PlayerLobbyController : SceneController
         {
             activatePlayer(data.playerId);
         }
-        else if(!isPlayerReady(data.playerId))
+        else if (!isPlayerReady(data.playerId))
         {
             readyPlayer(data.playerId);
         }
@@ -214,7 +243,7 @@ public class PlayerLobbyController : SceneController
 
     private void onCancelPressedEvent(Rewired.InputActionEventData data)
     {
-        if(isPlayerReady(data.playerId))
+        if (isPlayerReady(data.playerId))
         {
             unreadyPlayer(data.playerId);
         }
