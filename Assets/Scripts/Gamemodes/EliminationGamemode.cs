@@ -37,6 +37,14 @@ public class EliminationGamemode : Gamemode
                 _playersAlive++;
             }
         }
+
+        UIEliminationStatsManager uiStatsManager = GameObject.FindObjectOfType<UIEliminationStatsManager>();
+        if (uiStatsManager == null) Debug.LogError("[EliminationGamemode] Couldn't find UIEliminationStatsManager in scene!");
+        uiStatsManager.Initialize();
+
+        UIWinTextController winTextController = GameObject.FindObjectOfType<UIWinTextController>();
+        if (winTextController == null) Debug.LogError("[EliminationGamemode] Couldn't find UIWinTextController in scene!");
+        winTextController.Initialize();
     }
 
     public override void Unload()

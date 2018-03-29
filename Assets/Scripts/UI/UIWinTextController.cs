@@ -13,7 +13,7 @@ public class UIWinTextController : MonoBehaviour
     private Text _text;
     private float _fadeInTime;
 
-    private void Start()
+    public void Initialize()
     {
         ((GameSceneController)GameManager.Instance.SceneController).OnGameWon += onGameWonEvent;
 
@@ -25,6 +25,7 @@ public class UIWinTextController : MonoBehaviour
 
     private void onGameWonEvent(PlayerController winner)
     {
+        _text.text = winner.PlayerData.Name + " wins!";
         _text.color = winner.PlayerData.Color;
         _fadeInTime = FadeInLength;
     }

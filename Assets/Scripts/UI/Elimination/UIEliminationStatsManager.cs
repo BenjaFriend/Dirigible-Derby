@@ -9,7 +9,7 @@ public class UIEliminationStatsManager : MonoBehaviour
     public float Spacing;
     private GameObject rootStatsObject; // base object from which other UIEliminationPlayerStats objects are created
 
-    private void Start()
+    public void Initialize()
     {
         if(!GameManager.Instance.SceneHasController
             || GameManager.Instance.SceneController.GetType() != typeof(GameSceneController)
@@ -21,6 +21,7 @@ public class UIEliminationStatsManager : MonoBehaviour
         rootStatsObject = GetComponentInChildren<UIEliminationPlayerStats>().gameObject;
         initializeStatsObjects();
     }
+
 
     private void initializeStatsObjects()
     {
