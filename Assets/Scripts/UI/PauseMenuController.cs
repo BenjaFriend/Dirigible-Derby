@@ -34,7 +34,7 @@ public class PauseMenuController : MonoBehaviour
         GameManager.Instance.Unpause();
 
         // maybe we should have a confirmation screen?
-        GameManager.Instance.ChangeScene(Constants.Scenes.PlayerLobby);
+        GameManager.Instance.ChangeScene(Constants.Scenes.MainMenu);
     }
 
     public void OnResumeButtonPressed()
