@@ -7,7 +7,9 @@ Each player has three lives, but after they use up their last life, their charac
 
 # Download and Play!
 
-The game is available for Windows on Itch.io! Click the link to download:
+The game is available for Windows on Itch.io! 
+
+ [Download and Play](https://benjafriend.itch.io/dirigible-derby)
 
 ## What was my role in this project?
 
