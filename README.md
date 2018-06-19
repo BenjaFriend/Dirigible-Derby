@@ -1,36 +1,16 @@
-<<<<<<< HEAD
 
-Commit to your branch, and make sure that the status of your branch is clean.
-
-	git add .
-	git commit -m "Added feature XYZ"
-	git push
-	git status
-
-
-Checkout master, and pull. Make sure it is up to date.
-
-	git checkout master
-	git pull
-
-Checkout your branch again, and merge master into it.
-
-		git checkout your-branch
-		git merge master
-
-Solve any conflicts on your branch, and commit those changes to your branch.
-
-		git commit -m "Solved merge conflicts on XYZ"
-		git push
-
-Checkout master , merge your branch into it, and push those changes.
-```
-git checkout master
-git push
-```
-
-Tell everyone you pushed so they remember to pull!
-=======
 # Codename "Dirigible Derby"
-P O K E.
->>>>>>> master
+
+Dirigible Derby (DD) is a 2-4 player couch competetive game where the goal is to pop all other players in the game and be the last alive. Each player controlls a hot air balloon with a spike on the bottom and jet engines on the side.
+
+Each player has three lives, but after they use up their last lfie, their character stays in the game, but they can't controll it. This leads to dead players falling from the sky and becoming a threat to the alive players even after they are dead. 
+
+## What was my role in this project? 
+
+I was a programmer on this project mainly handling the player lobby, some gameplay programming, and setting up the input. I was one of five people to work on this project over the course of a three week sprint for my IGME 320 Game Design class. The class game no constraints for the game that we made other than it had to be a digital game.  
+
+### Tools Used
+
+* [Unity 2017.1.1](https://unity3d.com/)
+* C# 
+* [Rewired](https://assetstore.unity.com/packages/tools/utilities/rewired-21676) 
