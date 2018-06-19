@@ -17,19 +17,10 @@ I was a programmer on this project mainly handling the player lobby, some gamepl
 
 ### Other Information
 
-Check out the design doc for this game that our team made:
-
-![Design Doc Image][designDoc]
-
-
-Also, check out the post mortem presentation in the `docs` folder!
+Check out the design doc and post mortem presentation for this game that our team made in the `docs` folder!
 
 ### Tools Used
 
 * [Unity 2017.3.1f1](https://unity3d.com/)
 * C#
 * [Rewired](https://assetstore.unity.com/packages/tools/utilities/rewired-21676)
-
-
-
-[designDoc]: https://github.com/BenjaFriend/Dirigible-Derby/blob/master/docs/DDerby_DesignDoc.jpg?raw=true "Design Doc"
